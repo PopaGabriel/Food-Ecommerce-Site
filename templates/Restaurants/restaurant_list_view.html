@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% if object_list %}
+            <div class="row">
+                {% for item in object_list %}
+		        <div class="col-lg-4">
+                    <div class="card mb-3" style="max-width: 540px;">
+                                {% if item.main_image %}
+                                    <img src="{{ item.main_image.url }}" class="card-img-top">
+                                {% else %}
+                                    <img class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                            Title: {{ item.name}}
+                                    </h5>
+                                    <p class="card-text">Description: {{ item.description }}</p>
+                                    <p class="card-text"><small class="text-muted">{{ review.body }}</small></p>
+                                    <p class="card-text"> Tags:
+                                        {% for tag in item.tags.all %}
+                                            {{ tag }}
+                                        {% empty %}
+                                            There are no tags
+                                        {% endfor %}
+                                    </p>
+                                    {% if item.delivery %}
+                                        <p class="card-text"><strong>Minimum Command: {{ item.minimum_value_command }}</strong></p>
+                                    {% else %}
+                                        <h6><strong>This company doesn't deliver!</strong></h6>
+                                    {% endif %}
+                                    <button  class="btn btn-outline-success add-btn">
+                                        <a href={% url 'Restaurants:detail_restaurant' item.id %}> View Menus </a>
+                                    </button>
+                                </div>
+                    </div>
+		        </div>
+                {% endfor %}
+            </div>
+    {% else %}
+        <p> There are no restaurants at the moment </p>
+    {% endif %}
+{% endblock %}

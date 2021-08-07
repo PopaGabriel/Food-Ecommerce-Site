@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" value="Update" class="btn btn-outline-secondary add-btn">Update Section</button>
+    </form>
+{% endblock %}

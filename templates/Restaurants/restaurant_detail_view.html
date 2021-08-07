@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% if object.owner.username == user.username %}
+        <button class="btn btn-outline-secondary add-btn">
+            <a href={% url 'Restaurants:update_restaurant' object.id %}> Update Restaurant</a>
+        </button>
+    {% endif %}
+    <div class="container">
+
+    {% if  object.menus %}
+        {% for menu in object.menus.all %}
+            <h4 style="alignment: center"> {{ menu.type }} </h4>
+            <div>
+                {% for section in menu.sections.all %}
+                    <h5>{{ section.name }}</h5>
+                    <div class="row">
+                        {% for item in section.items.all %}
+                            <div class="col-lg-4">
+                                {% if item.photo %}
+                                    <img src="{{ item.photo.url }}" width="200" height="300" class="card-img-top">
+                                {% else %}
+                                    <img class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
+                                {% endif %}
+                                <div class="box-element Restaurant">
+                                    <h6><strong>Name: {{ item.name }}</strong></h6>
+                                    {% if item.discount > 0 %}
+                                        <h6> Price:
+                                            <strong>
+                                                <del>{{ item.price }}</del>
+                                            </strong>
+                                            <strong>
+                                                <ins style="color: red">{{ item.sell_price }}</ins>
+                                            </strong>
+                                        </h6>
+                                        <h6>Discount: <strong style="color: red"> {{ item.discount }}% </strong></h6>
+                                        {% else %}
+                                        <h6><strong>Price: {{ item.sell_price }}</strong></h6>
+                                    {% endif %}
+                                </div>
+                            {% if object.owner.username == user.username %}
+                                <button  class="btn btn-outline-success add-btn">
+                                    <a href = {% url "Restaurants:Menu:Food:update_item" item.id %}> Update Item </a>
+                                </button>
+                                <button  class="btn btn-outline-success add-btn">
+                                    <a href = {% url "Restaurants:Menu:Food:delete_item" item.id %}> Delete Item </a>
+                                </button>
+                            {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if object.owner.username == user.username %}
+                        <button  class="btn btn-outline-success add-btn">
+                            <a href={% url 'Restaurants:Menu:Food:add_food' section.id %}>Add Item</a>
+                        </button>
+                        <button  class="btn btn-outline-success add-btn">
+                            <a href={% url 'Restaurants:Menu:delete_section' section.id %}>Delete Section</a>
+                        </button>
+                        <button  class="btn btn-outline-success add-btn">
+                            <a href={% url 'Restaurants:Menu:update_section' section.id %}>Update Section</a>
+                        </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if object.owner.username == user.username %}
+                <button  class="btn btn-outline-success add-btn">
+                    <a href={% url 'Restaurants:Menu:add_section' menu.id %}> Add Section </a>
+                </button>
+                <button  class="btn btn-outline-success add-btn">
+                    <a href={% url 'Restaurants:Menu:delete_menu' menu.id %}>Delete Menu</a>
+                </button>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>There are no menus at the moment</p>
+    {% endif %}
+    {% if object.owner.username == user.username %}
+        <button  class="btn btn-outline-success add-btn">
+            <a href={% url 'Restaurants:Menu:add_menu' object.id%}> Add menu</a>
+        </button>
+    {% endif %}
+    <h3><strong>Reviews</strong></h3>
+    {% if object.reviews.all %}
+            <div class="row">
+                {% for review in object.reviews.all %}
+		        <div class="col-lg-4">
+                    <div class="card mb-3" style="max-width: 540px;">
+{#                                {% if review.author.profile.main_image %}#}
+{#                                    <img src="{{ review.author.profile.main_image.url }}" class="card-img-top">#}
+{#                                {% else %}#}
+                                    <img class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
+{#                              {% endif %}#}
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                            Title: {{ review.title }}
+                                    </h5>
+                                    <p class="card-text">Author:<a href={% url 'Profile:see_profile' review.author.id%}>
+                                        {{ review.author }}</a></p>
+                                    <p class="card-text">Description: {{ review.body }}</p>
+                                    <p class="card-text"><strong>Mark: {{ review.mark }}/5</strong></p>
+                                </div>
+                    </div>
+		        </div>
+                {% endfor %}
+            </div>
+    {% else %}
+        <div>
+            <h4><strong>There are no reviews yet!</strong></h4>
+        </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+        <button  class="btn btn-outline-success add-btn">
+            <a href={% url 'Restaurants:Reviews:add_review' object.id%}> Add Review</a>
+        </button>
+    {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<body>
+            <table>
+                <thead>
+                    <th> Index: </th>
+                    <th> Street: </th>
+                    <th> City: </th>
+                    <th> County: </th>
+                    <th> Action: </th>
+                </thead>
+                <tbody>
+                {% for location in object_list %}
+                        <tr>
+                            <td> {{ forloop.counter }} </td>
+                            <td> {{ location.street }} </td>
+                            <td> {{ location.city }} </td>
+                            <td> {{ location.country }} </td>
+                            <td>
+                                <a href={% url 'Restaurants:location_update' location.id %}> Modify </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                    <p> There are no Restaurants sorry :( </p>
+                {% endfor %}
+                </tbody>
+            </table>
+
+</body>
+{% endblock %}

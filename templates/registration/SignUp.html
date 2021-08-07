@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.non_field_errors }}
+        <button type="Submit" class="btn btn-outline-secondary add-btn"> Sign Up! </button>
+    </form>
+
+{% endblock %}

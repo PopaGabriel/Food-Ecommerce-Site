@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <h2 style="alignment: center"><strong>{{ object.user.username }}'s profile</strong></h2>
+    </div>
+    <h2><strong>Reviews: </strong></h2>
+    {% if object.user.username == user.username %}
+        <button>
+            <a href={% url 'Profile:update_profile' object.id %}> Update Profile </a>
+        </button>
+    {% endif %}
+    {% for review in object.user.reviews.all %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="..." class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href={% url 'Restaurants:detail_restaurant' review.restaurant.id %}>
+                            {{ review.restaurant.name}}
+                        </a >
+                    </h5>
+                    <p class="card-text">{{ review.mark }}/5</p>
+                    <p class="card-text"><small class="text-muted">{{ review.body  }}</small></p>
+                    {% if user.username == review.author.username %}
+                        <button>
+                            <a href={% url 'Restaurants:Reviews:update_review' review.id %}> Update review </a>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

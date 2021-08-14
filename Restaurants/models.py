@@ -52,6 +52,8 @@ class Restaurant(models.Model):
     main_image = models.ImageField(null=True,
                                    blank=True,
                                    upload_to='images/')
+    likes = models.ManyToManyField(User,
+                                   related_name='likes')
 
     def __str__(self) -> str:
         return self.name

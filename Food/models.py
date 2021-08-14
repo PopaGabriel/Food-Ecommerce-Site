@@ -27,7 +27,7 @@ class MenuItem(models.Model):
     price = models.FloatField(blank=False)
     discount = models.FloatField(default=0)
     photo = models.ImageField(upload_to='images/',
-                              default='/media/images/Salam.jpg')
+                              default='images/Salam.jpg')
 
     @property
     def sell_price(self) -> float:

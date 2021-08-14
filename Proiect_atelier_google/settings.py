@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Menu',
     'Food',
     'Food_basket',
+    'OrderFood',
     'Reviews',
     'Profile',
 ]

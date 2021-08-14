@@ -1,54 +1,57 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+    <div class="container-fluid">
     {% if object.owner.username == user.username %}
         <button class="btn btn-outline-secondary add-btn">
             <a href={% url 'Restaurants:update_restaurant' object.id %}> Update Restaurant</a>
         </button>
     {% endif %}
-    <div class="container">
-
     {% if  object.menus %}
         {% for menu in object.menus.all %}
             <h4 style="alignment: center"> {{ menu.type }} </h4>
             <div>
                 {% for section in menu.sections.all %}
+                    <section class="p-4 shadow bg-white rounded">
                     <h5>{{ section.name }}</h5>
                     <div class="row">
                         {% for item in section.items.all %}
                             <div class="col-lg-4">
-                                {% if item.photo %}
-                                    <img src="{{ item.photo.url }}" width="200" height="300" class="card-img-top">
-                                {% else %}
-                                    <img class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
-                                {% endif %}
-                                <div class="box-element Restaurant">
-                                    <h6><strong>Name: {{ item.name }}</strong></h6>
-                                    {% if item.discount > 0 %}
-                                        <h6> Price:
-                                            <strong>
-                                                <del>{{ item.price }}</del>
-                                            </strong>
-                                            <strong>
-                                                <ins style="color: red">{{ item.sell_price }}</ins>
-                                            </strong>
-                                        </h6>
-                                        <h6>Discount: <strong style="color: red"> {{ item.discount }}% </strong></h6>
-                                        {% else %}
-                                        <h6><strong>Price: {{ item.sell_price }}</strong></h6>
+                                <div class="card mb-3 shadow p-3 mb-5 bg-white rounded" style="max-width: 540px;">
+                                    {% if item.photo %}
+                                        <img alt='Food photo' src="{{ item.photo.url }}" width="200" height="300" class="card-img-top">
+                                    {% else %}
+                                        <img alt='Food photo' class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
                                     {% endif %}
+                                    <div class="box-element">
+                                        <h6><strong>Name: {{ item.name }}</strong></h6>
+                                        {% if item.discount > 0 %}
+                                            <h6> Price:
+                                                <strong>
+                                                    <del>{{ item.price }}</del>
+                                                </strong>
+                                                <strong>
+                                                    <ins style="color: red">{{ item.sell_price }}</ins>
+                                                </strong>
+                                            </h6>
+                                            <h6>Discount: <strong style="color: red"> {{ item.discount }}% </strong></h6>
+                                            {% else %}
+                                            <h6><strong>Price: {{ item.sell_price }}</strong></h6>
+                                        {% endif %}
+                                    </div>
+                                {% if object.owner.username == user.username %}
+                                    <button  class="btn btn-outline-success add-btn">
+                                        <a href = {% url "Restaurants:Menu:Food:update_item" item.id %}> Update Item </a>
+                                    </button>
+                                    <button  class="btn btn-outline-success add-btn">
+                                        <a href = {% url "Restaurants:Menu:Food:delete_item" item.id %}> Delete Item </a>
+                                    </button>
+                                {% endif %}
                                 </div>
-                            {% if object.owner.username == user.username %}
-                                <button  class="btn btn-outline-success add-btn">
-                                    <a href = {% url "Restaurants:Menu:Food:update_item" item.id %}> Update Item </a>
-                                </button>
-                                <button  class="btn btn-outline-success add-btn">
-                                    <a href = {% url "Restaurants:Menu:Food:delete_item" item.id %}> Delete Item </a>
-                                </button>
-                            {% endif %}
                             </div>
                         {% endfor %}
                     </div>
+                    </section>
                     {% if object.owner.username == user.username %}
                         <button  class="btn btn-outline-success add-btn">
                             <a href={% url 'Restaurants:Menu:Food:add_food' section.id %}>Add Item</a>
@@ -81,28 +84,30 @@
     {% endif %}
     <h3><strong>Reviews</strong></h3>
     {% if object.reviews.all %}
+        <section class="p-4 shadow bg-white rounded">
             <div class="row">
                 {% for review in object.reviews.all %}
-		        <div class="col-lg-4">
-                    <div class="card mb-3" style="max-width: 540px;">
-{#                                {% if review.author.profile.main_image %}#}
-{#                                    <img src="{{ review.author.profile.main_image.url }}" class="card-img-top">#}
-{#                                {% else %}#}
-                                    <img class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
-{#                              {% endif %}#}
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                            Title: {{ review.title }}
-                                    </h5>
-                                    <p class="card-text">Author:<a href={% url 'Profile:see_profile' review.author.id%}>
-                                        {{ review.author }}</a></p>
-                                    <p class="card-text">Description: {{ review.body }}</p>
-                                    <p class="card-text"><strong>Mark: {{ review.mark }}/5</strong></p>
-                                </div>
+                    <div class="col-lg-4">
+                        <div class="card mb-3 shadow p-3 mb-5 bg-white rounded" style="max-width: 540px;">
+                            {% if review.author.profile.main_image %}
+                                <img alt='Profile pic' src="{{ review.author.profile.main_image.url }}" class="card-img-top rounded-circle">
+                            {% else %}
+                                <img alt='Profile pic' class="card-img-top rounded-circle" src="{% static 'images/basic_business_icon.png' %}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Title: {{ review.title }}
+                                </h5>
+                                <p class="card-text">Author:<a href={% url 'Profile:see_profile' review.author.id%}>
+                                    {{ review.author }}</a></p>
+                                <p class="card-text">Description: {{ review.body }}</p>
+                                <p class="card-text"><strong>Mark: {{ review.mark }}/5</strong></p>
+                            </div>
+                        </div>
                     </div>
-		        </div>
                 {% endfor %}
             </div>
+        </section>
     {% else %}
         <div>
             <h4><strong>There are no reviews yet!</strong></h4>

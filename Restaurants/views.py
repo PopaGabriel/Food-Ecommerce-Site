@@ -21,7 +21,7 @@ class CreateLocationView(LoginRequiredMixin, CreateView):
 class LocationView(LoginRequiredMixin, ListView):
     model = Location
     template_name = 'Location/locations_list_view.html'
-    # paginate_by = 20
+    paginate_by = 6
 
 
 class UpdateLocationView(LoginRequiredMixin, UpdateView):

@@ -17,4 +17,5 @@ urlpatterns = [
     path('restaurant_edit/<int:pk>', UpdateRestaurantView.as_view(), name='update_restaurant'),
     path('Restaurant_view/<int:pk>/Menu/', include('Menu.urls')),
     path('Restaurant_view/<int:pk>/Review/', include('Reviews.urls')),
+    path('Restaurant_view/', include('Food_basket.urls')),
 ]

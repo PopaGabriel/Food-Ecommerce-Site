@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'OrderFood',
     'Reviews',
     'Profile',
+    'Checkout',
 ]
 
 MIDDLEWARE = [

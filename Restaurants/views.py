@@ -1,12 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import (ListView,
-                                  CreateView,
-                                  UpdateView,
-                                  DetailView)
-from .forms import (CreateRestaurantForm,
-                    EditRestaurantForm)
+from django.views.generic import (ListView, CreateView, UpdateView, DetailView)
+from .forms import (CreateRestaurantForm, EditRestaurantForm)
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from .models import Location, Restaurant
+from OrderFood.models import OrderFood
+from Food_basket.models import Basket
 
 
 class CreateLocationView(LoginRequiredMixin, CreateView):
@@ -54,6 +53,18 @@ class RestaurantView(ListView):
 class DetailRestaurantView(DetailView):
     model = Restaurant
     template_name = 'Restaurants/restaurant_detail_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailRestaurantView, self).get_context_data(**kwargs)
+        try:
+            restaurant = Restaurant.objects.get(id=self.kwargs['pk'])
+            food_basket = Basket.objects.get(restaurant=restaurant, user=self.request.user, sent=False)
+            ordered = OrderFood.objects.filter(food_basket=food_basket)
+        except ObjectDoesNotExist:
+            ordered = OrderFood.objects.none()
+        context['orders'] = ordered
+        print(context)
+        return context
 
 
 class UpdateRestaurantView(UpdateView):

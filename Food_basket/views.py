@@ -24,7 +24,7 @@ def create_basket_or_item(product_id, quantity, restaurant_id, user):
 
 def UpdateBasket(request):
     data = json.loads(request.body)
-    productid = data['productID']
+    product = data['productID']
     action = data['action']
     quantity = data['quantity']
     restaurant_id = data['restaurant_id']
@@ -37,13 +37,15 @@ def UpdateBasket(request):
             basket = Basket.objects.get(restaurant=restaurant,
                                         user=request.user,
                                         sent=False)
-            food = MenuItem.objects.get(id=productid)
+            food = MenuItem.objects.get(id=product)
             OrderFood.objects.filter(food=food, food_basket=basket).delete()
 
             if len(OrderFood.objects.filter(food_basket=basket)) == 0:
                 basket.delete()
     else:
-        create_basket_or_item(product_id=productid, quantity=quantity,
+        create_basket_or_item(product_id=product, quantity=quantity,
                               restaurant_id=restaurant_id, user=request.user)
-
-    return JsonResponse('Item was updated', safe=False)
+    data = {
+        'type': 'Item was updated'
+    }
+    return JsonResponse(data, safe=False)

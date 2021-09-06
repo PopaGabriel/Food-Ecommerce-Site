@@ -4,143 +4,216 @@
 {% block content %}
     <input type="hidden" name="restaurant_id_input" value='{{ object.id }}'>
     {% if object.owner.username == user.username %}
-            <button class="btn btn-outline-secondary add-btn">
-                <a href={% url 'Restaurants:update_restaurant' object.id %}> Update Restaurant</a>
-            </button>
-        {% endif %}
-            {% if  object.menus %}
-            {% for menu in object.menus.all %}
-                <section class="p-4 shadow bg-white rounded">
+        <button class="btn btn-outline-secondary add-btn">
+            <a href={% url 'Restaurants:update_restaurant' object.id %}> Update Restaurant</a>
+        </button>
+    {% endif %}
+    {% if  object.menus %}
+        {% for menu in object.menus.all %}
+            <section class="p-4 shadow bg-white rounded">
                 <div class="row .row-no-gutters">
                     <div class=".col-xs-6 .col-md-4 p-2">
-                            <h4> {{ menu.type }} </h4>
-                        </div>
-                        <div class=".col-xs-6 .col-md-4 p-2">
-                            {% if object.owner.username == user.username %}
-                                <button  class="btn btn-outline-success add-btn">
-                                    <a href={% url 'Restaurants:Menu:add_section' menu.id %}> Add Section </a>
-                                </button>
-                                <button  class="btn btn-outline-success add-btn">
-                                    <a href={% url 'Restaurants:Menu:delete_menu' menu.id %}>Delete Menu</a>
-                                </button>
-                            {% endif %}
-                        </div>
+                        <h4> {{ menu.type }} </h4>
                     </div>
-                    <div>
-                        {% for section in menu.sections.all %}
-                            <section class="p-4 shadow bg-white rounded">
-                                <div class="row .row-no-gutters">
-                                    <div class=".col-xs-6 .col-md-4 p-2">
-                                        <h5>{{ section.name }}</h5>
-                                    </div>
-                                    <div class=".col-xs-6 .col-md-4 p-2">
-                                        {% if object.owner.username == user.username %}
-                                            <button  class="btn btn-outline-success add-btn">
-                                                <a href={% url 'Restaurants:Menu:Food:add_food' section.id %}>Add Item</a>
-                                            </button>
-                                            <button  class="btn btn-outline-success add-btn">
-                                                <a href={% url 'Restaurants:Menu:delete_section' section.id %}>Delete Section</a>
-                                            </button>
-                                            <button  class="btn btn-outline-success add-btn">
-                                                <a href={% url 'Restaurants:Menu:update_section' section.id %}>Update Section</a>
-                                            </button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    {% for item in section.items.all %}
-                                        <div class="col-lg-4">
-                                            <div class="card mb-3 shadow p-3 mb-5 bg-white rounded" style="max-width: 540px;">
-                                                {% if item.photo %}
-                                                    <img alt='Food photo' src="{{ item.photo.url }}" width="200" height="300" class="card-img-top">
-                                                {% else %}
-                                                    <img alt='Food photo' class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
-                                                {% endif %}
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><strong> {{ item.name }}</strong></h5>
-                                                    {% if item.discount > 0 %}
-                                                        <p class="card-text"> Price:
-                                                            <strong>
-                                                                <del>{{ item.price }}</del>
-                                                            </strong>
-                                                            <strong>
-                                                                <ins style="color: red">{{ item.sell_price }}</ins>
-                                                            </strong>
-                                                        </p>
-                                                        <p class="card-text">Discount: <strong style="color: red"> {{ item.discount }}% </strong></p>
-                                                    {% else %}
-                                                        <p class="card-text"><strong>Price: {{ item.sell_price }}</strong></p>
-                                                    {% endif %}
-                                                    <form id="{{ item.id }} form_quantity">
-                                                        Number of items <input name="quantity_item" type="number" class="form-field" placeholder="{{ orders|contains_order:item }}">
-                                                    </form>
-                                                    <button  class="btn btn-outline-success add-btn"
-                                                             name="button-add-cart"
-                                                             data-action="add"
-                                                             data-product={{ item.id }}>
-                                                        Add to cart!
-                                                    </button>
-                                                </div>
-                                                {% if object.owner.username == user.username %}
-                                                    <button  class="btn btn-outline-success add-btn">
-                                                        <a href = {% url "Restaurants:Menu:Food:update_item" item.id %}> Update Item </a>
-                                                    </button>
-                                                    <button  class="btn btn-outline-success add-btn">
-                                                        <a href = {% url "Restaurants:Menu:Food:delete_item" item.id %}> Delete Item </a>
-                                                    </button>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </section>
-                        {% endfor %}
+                    <div class=".col-xs-6 .col-md-4 p-2">
+                        {% if object.owner.username == user.username %}
+                            <button class="btn btn-outline-success add-btn">
+                                <a href={% url 'Restaurants:Menu:add_section' menu.id %}> Add Section </a>
+                            </button>
+                            <button class="btn btn-outline-success add-btn">
+                                <a href={% url 'Restaurants:Menu:delete_menu' menu.id %}>Delete Menu</a>
+                            </button>
+                        {% endif %}
                     </div>
-                </section>
-            {% endfor %}
-        {% else %}
-            <p>There are no menus at the moment</p>
-        {% endif %}
-        {% if object.owner.username == user.username %}
-            <button  class="btn btn-outline-success add-btn">
-                <a href={% url 'Restaurants:Menu:add_menu' object.id%}> Add menu</a>
-            </button>
-        {% endif %}
-        <h3><strong>Reviews</strong></h3>
-                {% if user.is_authenticated %}
-                    <button  class="btn btn-outline-success add-btn">
-                        <a href={% url 'Restaurants:Reviews:add_review' object.id%}> Add Review</a>
-                    </button>
-                {% endif %}
-        {% if object.reviews.all %}
-            <section class="p-4 shadow bg-white rounded">
-                <div class="row">
-                    {% for review in object.reviews.all %}
-                        <div class="col-lg-4">
-                            <div class="card mb-3 shadow p-3 mb-5 bg-white rounded" style="max-width: 540px;">
-                                {% if review.author.profile.main_image %}
-                                    <img alt='Profile pic' src="{{ review.author.profile.main_image.url }}" class="card-img-top rounded-circle">
-                                {% else %}
-                                    <img alt='Profile pic' class="card-img-top rounded-circle" src="{% static 'images/basic_business_icon.png' %}">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Title: {{ review.title }}
-                                    </h5>
-                                    <p class="card-text">Author:<a href={% url 'Profile:see_profile' review.author.id%}>
-                                        {{ review.author }}</a></p>
-                                    <p class="card-text">Description: {{ review.body }}</p>
-                                    <p class="card-text"><strong>Mark: {{ review.mark }}/5</strong></p>
+                </div>
+                <div>
+                    {% for section in menu.sections.all %}
+                        <section class="p-4 shadow bg-white rounded">
+                            <div class="row .row-no-gutters">
+                                <div class=".col-xs-6 .col-md-4 p-2">
+                                    <h5>{{ section.name }}</h5>
+                                </div>
+                                <div class=".col-xs-6 .col-md-4 p-2">
+                                    {% if object.owner.username == user.username %}
+                                        <button class="btn btn-outline-success add-btn">
+                                            <a href={% url 'Restaurants:Menu:Food:add_food' section.id %}>Add Item</a>
+                                        </button>
+                                        <button class="btn btn-outline-success add-btn">
+                                            <a href={% url 'Restaurants:Menu:delete_section' section.id %}>Delete
+                                                Section</a>
+                                        </button>
+                                        <button class="btn btn-outline-success add-btn">
+                                            <a href={% url 'Restaurants:Menu:update_section' section.id %}>Update
+                                                Section</a>
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                {% for item in section.items.all %}
+                                    <div class="col-lg-4">
+                                        <div class="card mb-3 shadow p-3 mb-5 bg-white rounded"
+                                             style="max-width: 540px;">
+                                            {% if item.photo %}
+                                                <img alt='Food photo' src="{{ item.photo.url }}" width="200"
+                                                     height="300" class="card-img-top">
+                                            {% else %}
+                                                <img alt='Food photo' class="card-img-top"
+                                                     src="{% static 'images/basic_business_icon.png' %}">
+                                            {% endif %}
+                                            <div class="card-body">
+                                                <h5 class="card-title"><strong> {{ item.name }}</strong></h5>
+                                                {% if item.discount > 0 %}
+                                                    <p class="card-text"> Price:
+                                                        <strong>
+                                                            <del>{{ item.price }}</del>
+                                                        </strong>
+                                                        <strong>
+                                                            <ins style="color: red">{{ item.sell_price }}</ins>
+                                                        </strong>
+                                                    </p>
+                                                    <p class="card-text">Discount: <strong
+                                                            style="color: red"> {{ item.discount }}% </strong></p>
+                                                {% else %}
+                                                    <p class="card-text"><strong>Price: {{ item.sell_price }}</strong>
+                                                    </p>
+                                                {% endif %}
+                                                {# ITEM: Select the quantity form #}
+                                                <form id="{{ item.id }} form_quantity" class="form-group">
+                                                    <div class="row">
+                                                        <label>
+                                                            Number of items <input name="quantity_item" type="number"
+                                                                                   class="form-control input-sm"
+                                                                                   placeholder="{{ orders|contains_order:item }}"
+                                                                                   value="{{ orders|contains_order:item }}">
+                                                        </label>
+                                                        <button class="btn btn-outline-success add-btn form-control"
+                                                                name="button-add-cart"
+                                                                data-action="add"
+                                                                data-product={{ item.id }}>
+                                                            Add to cart!
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            {% if object.owner.username == user.username %}
+                                                <button class="btn btn-outline-success add-btn">
+                                                    <a href= {% url "Restaurants:Menu:Food:update_item" item.id %}>
+                                                        Update Item </a>
+                                                </button>
+                                                <button class="btn btn-outline-success add-btn">
+                                                    <a href= {% url "Restaurants:Menu:Food:delete_item" item.id %}>
+                                                        Delete Item </a>
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
                     {% endfor %}
                 </div>
             </section>
-        {% else %}
-            <div>
-                <h4><strong>There are no reviews yet!</strong></h4>
-            </div>
-        {% endif %}
-    </div>
+        {% endfor %}
+    {% else %}
+        <p>There are no menus at the moment</p>
+    {% endif %}
+    {% if object.owner.username == user.username %}
+        <button class="btn btn-outline-success add-btn">
+            <a href={% url 'Restaurants:Menu:add_menu' object.id %}> Add menu</a>
+        </button>
+    {% endif %}
+    <h3><strong>Reviews</strong></h3>
+    {% if user.is_authenticated %}
+        <button name='add_review_first_button' class="btn btn-success">Add Review</button>
+    {% endif %}
+    {# REVIEW ADD #}
+    {% if user.is_authenticated %}
+        <section>
+            <form id="add_review_form"
+                  property="transition: height 4s;" class="form-group hide m-4">
+                <div class="row">
+                    <label for="review_title" class="col-form-label-2 "> Title: </label>
+                    <div class="col-3">
+                        <input name="review_title" id="review_title" type="text"
+                               class="form-control  mb-4"
+                               placeholder="Write comments title"
+                               required>
+                    </div>
+                    <label for="review_mark" class="col-form-label-2"> Mark: </label>
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <select class="form-select" name='review_mark' id="review_mark" required
+                                    aria-label="Floating label select example">
+                                <option value="0/5">0/5</option>
+                                <option value="1">1/5</option>
+                                <option value="2">2/5</option>
+                                <option value="3" selected>3/5</option>
+                                <option value="4">4/5</option>
+                                <option value="5">5/5</option>
+                            </select>
+                            <label for="review_mark">Works with selects</label>
+                        </div>
+                    </div>
+                </div>
+                <label for="review_title" class="col-form-label"> Body: </label>
+                <input name="review_body" type="text"
+                       class="form-control input-sm mb-4"
+                       placeholder="Write your comment"
+                       required>
+                <button class="btn btn-success form-control"
+                        name="button-add-review"
+                        data-action="add">
+                    Add Review
+                </button>
+            </form>
+        </section>
+    {% endif %}
+    {# Here are all of the Reviews #}
+    {% if object.reviews.all %}
+        <div class="row" id="reviews_div">
+            {% for review in object.reviews.all %}
+                <div class="card m-2 shadow rounded" style="max-width: 540px;">
+                    {% if review.author.profile.main_image %}
+                        {{ review.author.profile.main_image.url }}
+                        <img alt='Profile pic' src="{{ review.author.profile.main_image.url }}"
+                             class="card-img-top rounded-circle">
+                    {% else %}
+                        <img alt='Profile pic' class="card-img-top rounded-circle"
+                             src="{% static 'images/basic_business_icon.png' %}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Title: {{ review.title }}
+                            <strong>Mark: {{ review.mark }}/5</strong>
+                        </h5>
+                        <p>
+                            <button id="{{ review.id }}review_like_button"
+                                    value="{{ review.id }}"
+                                    name="review_like_button"
+                                    class="btn btn-success add-btn">Like!
+                            </button>
+                            <label class="m-1" id="{{ review.id }}review_label">
+                                {{ review.likes.count }} - {{ review.dislikes.count }}
+                            </label>
+                            <button id="{{ review.id }}review_dislike_button"
+                                    name="review_dislike_button"
+                                    value="{{ review.id }}"
+                                    class="btn btn-danger add-btn">Dislike!>
+                            </button>
+                        </p>
+                        <p class="card-text">Author:<a href={% url 'Profile:see_profile' review.author.id %}>
+                            {{ review.author }}</a></p>
+                        <p class="card-text">Description: {{ review.body }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>
+            <h4><strong>There are no reviews yet!</strong></h4>
+        </div>
+    {% endif %}
+    <script type="text/javascript" src={% static 'javascript/basket.js' %}></script>
+    <script type="text/javascript" src={% static 'javascript/review.js' %}></script>
 {% endblock %}

@@ -8,15 +8,17 @@
                     <div class="col-lg-4">
                         <div class="card mb-3 shadow p-3 mb-5 bg-white rounded" style="max-width: 540px;">
                             {% if item.main_image %}
-                                 <div class="embed-responsive embed-responsive-1by1">
-                                    <img alt="Card image cap" class="card-img-top embed-responsive-item" src="{{ item.main_image.url }}" />
+                                <div class="embed-responsive embed-responsive-1by1">
+                                    <img alt="Card image cap" class="card-img-top embed-responsive-item"
+                                         src="{{ item.main_image.url }}"/>
                                 </div>
                             {% else %}
-                                <img alt='Card image cap' class="card-img-top" src="{% static 'images/basic_business_icon.png' %}">
+                                <img alt='Card image cap' class="card-img-top"
+                                     src="{% static 'images/basic_business_icon.png' %}">
                             {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Title: {{ item.name}}
+                                    Title: {{ item.name }}
                                 </h5>
                                 <p class="card-text">Description: {{ item.description }}</p>
                                 <p class="card-text"><small class="text-muted">{{ review.body }}</small></p>
@@ -28,24 +30,37 @@
                                     {% endfor %}
                                 </p>
                                 {% if item.delivery %}
-                                    <p class="card-text"><strong>Minimum Command: {{ item.minimum_value_command }}</strong></p>
+                                    <p class="card-text"><strong>Minimum
+                                        Command: {{ item.minimum_value_command }}</strong></p>
                                 {% else %}
                                     <h6><strong>This company doesn't deliver!</strong></h6>
                                 {% endif %}
-                                <button  class="btn btn-outline-success add-btn">
-                                    <a href={% url 'Restaurants:detail_restaurant' item.id %}> View Menus </a>
-                                </button>
-                                <form action='{% url 'Likes:like_restaurant' item.id %}' method='POST'>
-                                    {% csrf_token %}
-                                    Likes:{{ item.likes.all|length }}
-                                    <button type="submit" value="{{ item.id }}" name='post_id' class="btn btn-success rounded btn-sm">
-                                        {% if user in item.likes.all %}
-                                            Unlike !
-                                        {% else %}
-                                            Like !
-                                        {% endif %}
+                                {# Like-Dislike-View Form #}
+                                <div class="row">
+                                    {# View button #}
+                                    <button class="btn btn-outline-success rounded btn-sm m-1">
+                                        <a href={% url 'Restaurants:detail_restaurant' item.id %}> View Menus </a>
                                     </button>
-                                </form>
+                                    {# Like form #}
+                                    <form action='{% url 'Likes&Dislikes:like_restaurant' item.id %}' method='POST'>
+                                        {% csrf_token %}
+                                        <button type="submit" value="{{ item.id }}" name='post_id'
+                                                class="btn btn-success rounded btn-sm m-1">
+                                            Like!
+                                        </button>
+                                    </form>
+                                    <label class="m-1">
+                                        {{ item.likes.all|length }} - {{ item.dislikes.all|length }}
+                                    </label>
+                                    {# DisLike form #}
+                                    <form action='{% url 'Likes&Dislikes:dislike_restaurant' item.id %}' method='POST'>
+                                        {% csrf_token %}
+                                        <button type="submit" value="{{ item.id }}" name='post_id'
+                                                class="btn btn-danger rounded btn-sm m-1">
+                                            Dislike!
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

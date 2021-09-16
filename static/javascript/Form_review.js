@@ -10,6 +10,11 @@ const Create_review_form = {
         const template = document.createElement('template')
         template.innerHTML = html
 
+        template.content.querySelector('.confirm__button--add').addEventListener('click', ()=> {
+            options.on_ok()
+            this.close(confirmEl)
+        })
+
         const confirmEl = template.content.querySelector('.form_create_review');
         confirmEl.addEventListener('click', e => {
             if (e.target === confirmEl) {
@@ -20,16 +25,11 @@ const Create_review_form = {
 
         const btnClose = template.content.querySelector('.confirm__close');
         const btnCancel = template.content.querySelector('.confirm__button--cancel');
-        const btnOk = template.content.querySelector('.confirm__button--add');
-        [btnClose, btnCancel, btnOk].forEach(item =>{
+        [btnClose, btnCancel].forEach(item =>{
             item.addEventListener('click', () => {
                 options.on_cancel()
                 this.close(confirmEl)
             })
-        })
-        template.content.querySelector('.confirm__button--add').addEventListener('click', ()=> {
-            options.on_ok()
-            this.close(confirmEl)
         })
     document.getElementById(options.parent_id).appendChild(template.content)
     },

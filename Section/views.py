@@ -12,13 +12,8 @@ from Menu.models import Menu
 @login_required()
 def SectionAddView(request):
     try:
-        data = json.load(request.body)
-        print(data)
-        menu = Menu.objects.get(id=data['menu'])
-        section = Section.objects.create()
-        section.name = data['title']
-        section.menu = menu
-        section.save()
+        data = json.loads(request.body)
+        Section.objects.create(name=data['title'], menu=Menu.objects.get(id=data['menu'])).save()
         return JsonResponse('Success', safe=False)
     except ObjectDoesNotExist:
         return JsonResponse('Failure', safe=False)

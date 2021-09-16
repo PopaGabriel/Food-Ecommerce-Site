@@ -1,4 +1,4 @@
-const url_add_section = 'section/section_add'
+const url_add_section = '/section/section_add'
 
 
 let button_show_form_section = document.getElementsByName('button_show_form_section')
@@ -26,8 +26,6 @@ button_show_form_section.forEach(item => {
                         </div>
                       </div>`,
                 on_ok: function () {
-                    console.log(document.getElementById('section_title_input'))
-                    console.log(document.getElementsByName('section_title_input'))
                     fetch(url_add_section, {
                             method: 'POST',
                             headers: {

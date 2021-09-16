@@ -13,3 +13,6 @@
     max-height: 0px;
     transition: max-height 0.3s, opacity 0.3s, visibility 0.3s linear;
 }
+body {
+    background: aliceblue;
+}

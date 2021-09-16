@@ -1,0 +1,117 @@
+body, html {
+    background-color: #EEE;
+    font-family: sans-serif;
+    font-size: 16px;
+    color: #000;
+}
+
+.skill-card {
+    flex-shrink: 3;
+    margin: 10px;
+    padding: 20px;
+    width: 20em;
+    background-color: #FFF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    cursor: pointer;
+}
+
+.skill-card:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.skill-card:hover .skill-card__header {
+    height: 40px;
+}
+
+.skill-card:hover .skill-card__header .skill-card__icon {
+    transform: translateX(-70%) translateY(-50%) scale(3);
+}
+
+.skill-card:hover .skill-card__body {
+    height: 400px;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li {
+    transform: translateX(0);
+    transition-timing-function: cubic-bezier(0, 1.5, 1, 1);
+    transition-duration: .5s;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(1) {
+    transition-delay: 0s;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(5) {
+    transition-delay: 0.5s;
+}
+
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(6) {
+    transition-delay: 0.6s;
+}
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(7) {
+    transition-delay: 0.7s;
+}
+.skill-card:hover .skill-card__body .skill-card__knowledge li:nth-child(6) {
+    transition-delay: 0.8s;
+}
+
+.skill-card__header {
+    position: relative;
+    background-color: #eb6c3f;
+    height: 200px;
+    margin: -20px -20px 20px -20px;
+    transition: height .5s;
+    overflow: hidden;
+}
+
+.skill-card .skill-card__header .skill-card__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    display: block;
+    width: 320px;
+    height: 200px;
+    transition: transform .5s;
+}
+
+.skill-card .skill-card__body {
+    height: 40px;
+    transition: height .5s;
+    overflow: hidden;
+}
+
+.skill-card .skill-card__body .skill-card__title {
+    font-size: 1.4em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.skill-card .skill-card__body .skill-card__duration {
+    color: #9E9E9E;
+    font-style: italic;
+}
+
+.skill-card .skill-card__body .skill-card__knowledge {
+    margin-top: 10px;
+    color: #424242;
+}
+
+.skill-card .skill-card__body .skill-card__knowledge li {
+    margin-top: 5px;
+    transition-duration: 0s;
+    transition-delay: .5s;
+    transform: translateX(-100%);
+}

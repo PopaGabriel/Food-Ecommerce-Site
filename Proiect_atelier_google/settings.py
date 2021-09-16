@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Profile',
     'Checkout',
     'Comments',
+    'Section',
 ]
 
 MIDDLEWARE = [

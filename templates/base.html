@@ -3,16 +3,20 @@
 <html lang="en">
 <head>
     <title> Restaurants App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+    <meta name='viewport' content=' width=device-width, initial-scale=0.1, maximum-scale=1, user-scalable=1'/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href='{% static 'css/base.css' %}'>
-    <link rel="apple-touch-icon" sizes="180x180" href={% static 'images/icon/apple-touch-icon.png' %}>
-    <link rel="icon" type="image/png" sizes="32x32" href={% static 'images/icon/favicon-32x32.png' %}>
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/icon/favicon-16x16.png' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap">
+    <link rel="stylesheet" href="{% static 'css/card/cards.css' %}"/>
+    <link rel="stylesheet" href='{% static 'css/base.css' %}'/>
+    <link rel="stylesheet" href='{% static 'css/Confirm_button/Confirm_button.css' %}'/>
+    <link rel="stylesheet" href="{% static 'css/buttons/buttons.css' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href={% static 'images/icon/apple-touch-icon.png' %}/>
+    <link rel="icon" type="image/png" sizes="32x32" href={% static 'images/icon/favicon-32x32.png' %}/>
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/icon/favicon-16x16.png' %}"/>
+
     <link rel="manifest" href="{% static 'images/icon/site.webmanifest' %}">
 </head>
-{#src="{% static 'images/basic_business_icon.png' %}"#}
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark pb-1">
     {% if user.is_authenticated %}
@@ -48,9 +52,6 @@
                         <a class="navbar-brand" href={% url "Profile:create_profile" 1 %}> Create Profile</a>
                     {% endif %}
                 </li>
-                {#            <li class="nav-item">#}
-                {#                <a class="nav-link" href={% url 'Users:update_profile' %}> Update Profile </a>#}
-                {#            </li>#}
                 <li class="nav-item active">
                     <a class="nav-link" href={% url 'Restaurants:add_restaurant' %}> Create Bussiness </a>
                 </li>
@@ -66,6 +67,7 @@
 
     </div>
 </nav>
+
 <div class="container">
     <section>
         {% block content %}{% endblock %}
@@ -82,7 +84,6 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript">
     const user = '{{ request.user }}'
-    const user_id = '{{ request.user.id }}'
 
     function getCookie(name) {
         let cookieValue = null;
@@ -90,7 +91,6 @@
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -102,5 +102,6 @@
 
     const csrftoken = getCookie('csrftoken');
 </script>
+
 </body>
 </html>

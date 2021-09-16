@@ -1,57 +1,98 @@
-import './element_creation'
-
-let add_review_button = document.getElementsByName('button-add-review')[0]
 let show_review_form = document.getElementsByName('add_review_first_button')[0]
 let review_like_buttons = document.getElementsByName('review_like_button')
 let review_dislike_buttons = document.getElementsByName('review_dislike_button')
+let review_delete_buttons = document.getElementsByName('review_delete_button')
 
 const url_review = 'add_review/'
+const url_review_delete = 'delete_review/'
 const url_review_like_dislike = '/likes/' + '0/' + 'like_dislike_review'
 
-add_review_button.addEventListener('click', async function (e) {
-        e.preventDefault()
-        let restaurant = document.getElementsByName('restaurant_id_input')[0].value
-        let action = this.dataset.action;
-        let title = document.getElementsByName('review_title')[0].value
-        let body = document.getElementsByName('review_body')[0].value
-        let mark = document.getElementsByName('review_mark')[0].value
-        if (user === 'AnonymousUser') {
-            console.log('Not logged in')
-        } else {
-            let data = await add_review_func(restaurant, title, body, mark, action)
-            create_review_html(title, body, mark, data)
-        }
-    }
-)
-
-async function add_review_func(restaurant, title, body, mark, action) {
-    let data = await fetch(url_review, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application.json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({
-                'restaurant': restaurant,
-                'title': title,
-                'body': body,
-                'mark': mark,
-                'action': action
+review_delete_buttons.forEach((elem) => elem.addEventListener('click', async function (e) {
+    e.preventDefault()
+    Confirm.open({
+        title: 'Salut',
+        message: 'Scuze',
+        okText: 'Da',
+        cancelText: 'Nu',
+        parent_id: 'div_review_add',
+        value: this.value,
+        on_ok: async function () {
+            let data = await fetch(url_review_delete, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application.json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    'id': value
+                })
             })
+            return await data.json()
         }
-    );
-    return await data.json()
-}
+    })
+}))
 
 show_review_form.addEventListener('click', function (e) {
     e.preventDefault()
-    let form_review = document.getElementById('add_review_form')
-    if (form_review.classList.contains('hide')) {
-        form_review.classList.remove('hide')
-        form_review.classList.add('hint')
+    if (user === 'AnonymousUser') {
+        console.log('Not logged in')
+    } else if (document.getElementById('div_review_add').querySelector('.form_create_review') == null) {
+        Create_review_form.open({
+            parent_id: 'div_review_add',
+            html: `<div class="form_create_review">
+                        <div class="confirm__window" >
+                            <div class="confirm__titlebar">
+                                <span class="confirm__title">Create review</span>
+                                <button class="confirm__close">&times;</button>
+                            </div>
+                            <div class="confirm__content" style="height: 70px;">
+                               <label for="review_mark"> Mark: </label>
+                               <select name='review_mark' id="review_mark_select" aria-label="Floating label select example">
+                                   <option value="0/5">0/5</option>
+                                   <option value="1">1/5</option>
+                                   <option value="2">2/5</option>
+                                   <option value="3" selected>3/5</option>
+                                   <option value="4">4/5</option>
+                                   <option value="5">5/5</option>
+                               </select>
+                               <label for="review_mark">Works with selects</label>
+                            </div>
+                            <div class="confirm__content">
+                                <label for="review_title"> Title: </label>
+                                <input id="review_title_input" type="text" placeholder="Write comments title"/>
+                            </div>
+                            <div class="confirm__content " style="height: 175px; margin-bottom: 10px; margin-top: 0">
+                                <label> Body: </label>
+                                <textarea class="input" id="body_review_input" name="review_body" type="text" placeholder="Write your comment" style="width: 100%; height: 80%"></textarea>
+                            </div>
+                            <div class="confirm__buttons">
+                                <button class="confirm__button confirm__button--fill confirm__button--add" name="button-add-review">Add Review</button>
+                                <button class="confirm__button confirm__button--fill confirm__button--cancel">Cancel</button>
+                            </div>
+                        </div>
+                      </div>`,
+            on_ok: function () {
+                fetch(url_review, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application.json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body: JSON.stringify({
+                            'restaurant': restaurant_id,
+                            'title': document.getElementById('body_review_input').value,
+                            'body': document.getElementById('review_title_input').value,
+                            'mark': document.getElementById('review_mark_select').value,
+                            'action': 'add'
+                        })
+                    }
+                ).then(response => response.json()).then(data => console.log(data))
+            }
+        })
+    } else if (document.getElementById('div_review_add').querySelector('.form_create_review').classList.contains('hide')) {
+        document.getElementById('div_review_add').querySelector('.form_create_review').classList.remove('hide')
     } else {
-        form_review.classList.remove('hint')
-        form_review.classList.add('hide')
+        document.getElementById('div_review_add').querySelector('.form_create_review').classList.add('hide')
     }
 })
 
@@ -68,9 +109,7 @@ for (let i = 0; i < review_like_buttons.length; i++) {
                 'action': 'like',
                 'review': review_like_buttons[i].value,
             })
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
+        }).then((response) => response.json()).then((data) => {
             let label = document.getElementById('' + review_like_buttons[i].value + 'review_label')
             label.innerHTML = data['likes'] + ' - ' + data['dislikes']
         });
@@ -97,34 +136,3 @@ for (let i = 0; i < review_dislike_buttons.length; i++) {
         });
     })
 }
-
-function create_review_html(title, body, mark, data) {
-    let parent_div = create_div('')
-    let review_body = create_paragraph(body, '')
-    let review_title = create_header(title + "   Mark:" + mark, '', 'h5')
-    let review_img = create_img(data['image'], '')
-
-    parent_div.appendChild(review_img)
-    parent_div.appendChild(review_title)
-    parent_div.appendChild(review_body)
-
-    let destination = document.getElementById('reviews_div')
-    destination.insertBefore(parent_div, destination.firstChild)
-    console.log(data)
-}
-
-async function delete_review_button(value) {
-    let data = await fetch(url, {
-        method: {'POST'},
-        headers: {
-            'Content-Type': 'application.json',
-            'X-CSRFToken': csrftoken,
-        },
-        body: {
-            'id': value,
-            'id_user': user_id
-        }
-    })
-    return await data.json()
-}
-

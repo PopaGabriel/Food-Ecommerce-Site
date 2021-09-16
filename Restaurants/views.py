@@ -63,7 +63,6 @@ class DetailRestaurantView(DetailView):
         except ObjectDoesNotExist:
             ordered = OrderFood.objects.none()
         context['orders'] = ordered
-        print(context)
         return context
 
 

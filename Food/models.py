@@ -14,7 +14,7 @@ class MenuItem(models.Model):
     class AdultOriented(models.IntegerChoices):
         Yes = 1, _('Yes')
         No = 0, _('No')
-    section = models.ForeignKey('Menu.Section',
+    section = models.ForeignKey('Section.Section',
                                 on_delete=models.CASCADE,
                                 related_name='items')
     ingredients = models.ManyToManyField('Ingredients')

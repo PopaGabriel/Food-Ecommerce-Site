@@ -3,13 +3,11 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import (CreateView,
                                   DeleteView,
                                   UpdateView,)
-from .forms import (AddMenuItemForm,
-                    UpdateMenuItemForm)
 from .models import MenuItem
 
 
 class AddMenuItemView(LoginRequiredMixin, CreateView):
-    form_class = AddMenuItemForm
+    # form_class = AddMenuItemForm
     template_name = 'Food/add_menu_item.html'
     model = MenuItem
 
@@ -29,4 +27,4 @@ class DeleteMenuItemView(LoginRequiredMixin, DeleteView):
 class UpdateMenuItemView(LoginRequiredMixin, UpdateView):
     model = MenuItem
     template_name = 'Food/update_menu_item.html'
-    form_class = UpdateMenuItemForm
+    # form_class = UpdateMenuItemForm

@@ -9,7 +9,7 @@ import Reviews.models
 from Restaurants.models import Restaurant
 
 
-def LikeViewRestaurantList(request, pk):
+def LikeViewRestaurantList(request):
     restaurant = get_object_or_404(Restaurant, id=request.POST.get('post_id'))
     if restaurant.likes.filter(id=request.user.id).exists():
         restaurant.likes.remove(request.user)
@@ -22,7 +22,7 @@ def LikeViewRestaurantList(request, pk):
     return HttpResponseRedirect(reverse_lazy('home'))
 
 
-def DislikeViewRestaurantList(request, pk):
+def DislikeViewRestaurantList(request):
     restaurant = get_object_or_404(Restaurant, id=request.POST.get('post_id'))
     if restaurant.dislikes.filter(id=request.user.id).exists():
         restaurant.dislikes.remove(request.user)

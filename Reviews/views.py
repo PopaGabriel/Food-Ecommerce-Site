@@ -52,5 +52,5 @@ def DeleteViewReview(request):
     try:
         Review.objects.get(id=data['id'], author=request.user).delete()
     except ObjectDoesNotExist:
-        return JsonResponse('Error not deleted', safe=False)
-    return JsonResponse('Deleted', safe=False)
+        return JsonResponse('error', safe=False)
+    return JsonResponse('Success', safe=False)

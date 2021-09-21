@@ -12,6 +12,6 @@ urlpatterns = [
     path('Restaurants/', include('Restaurants.urls')),
     path('accounts/', include('CustomUsers.urls'), name='signup'),
     path('profile/<int:pk>/', include('Profile.urls')),
-    path('likes/<int:pk>/', include('Likes&Dislikes.urls')),
+    path('likes/', include('Likes&Dislikes.urls')),
     path('section/', include('Section.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

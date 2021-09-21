@@ -42,24 +42,24 @@
                                         <a href={% url 'Restaurants:detail_restaurant' item.id %}> View Menus </a>
                                     </button>
                                     {# Like form #}
-                                    <form action='{% url 'Likes&Dislikes:like_restaurant' item.id %}' method='POST'>
-                                        {% csrf_token %}
-                                        <button type="submit" value="{{ item.id }}" name='post_id'
-                                                class="btn btn-success rounded btn-sm m-1">
-                                            Like!
-                                        </button>
-                                    </form>
+{#                                    <form action='{% url 'Likes&Dislikes:like_restaurant' item.id %}' method='POST'>#}
+{#                                        {% csrf_token %}#}
+{#                                        <button type="submit" value="{{ item.id }}" name='post_id'#}
+{#                                                class="btn btn-success rounded btn-sm m-1">#}
+{#                                            Like!#}
+{#                                        </button>#}
+{#                                    </form>#}
                                     <label class="m-1">
                                         {{ item.likes.all|length }} - {{ item.dislikes.all|length }}
                                     </label>
                                     {# DisLike form #}
-                                    <form action='{% url 'Likes&Dislikes:dislike_restaurant' item.id %}' method='POST'>
-                                        {% csrf_token %}
-                                        <button type="submit" value="{{ item.id }}" name='post_id'
-                                                class="btn btn-danger rounded btn-sm m-1">
-                                            Dislike!
-                                        </button>
-                                    </form>
+{#                                    <form action='{% url 'Likes&Dislikes:dislike_restaurant' item.id %}' method='POST'>#}
+{#                                        {% csrf_token %}#}
+{#                                        <button type="submit" value="{{ item.id }}" name='post_id'#}
+{#                                                class="btn btn-danger rounded btn-sm m-1">#}
+{#                                            Dislike!#}
+{#                                        </button>#}
+{#                                    </form>#}
                                 </div>
                             </div>
                         </div>

@@ -3,9 +3,9 @@ let review_like_buttons = document.getElementsByName('review_like_button')
 let review_dislike_buttons = document.getElementsByName('review_dislike_button')
 let review_delete_buttons = document.getElementsByName('review_delete_button')
 
-const url_review = 'add_review/'
-const url_review_delete = 'delete_review/'
-const url_review_like_dislike = '/likes/' + '0/' + 'like_dislike_review'
+const url_review = '/Restaurants/Reviews/add_review/'
+const url_review_delete = '/Restaurants/Reviews/delete_review/'
+const url_review_like_dislike = '/likes/like_dislike_review'
 
 review_delete_buttons.forEach((elem) => elem.addEventListener('click', async function (e) {
     e.preventDefault()
@@ -15,19 +15,22 @@ review_delete_buttons.forEach((elem) => elem.addEventListener('click', async fun
         okText: 'Da',
         cancelText: 'Nu',
         parent_id: 'div_review_add',
-        value: this.value,
-        on_ok: async function () {
-            let data = await fetch(url_review_delete, {
+        value: elem.value,
+        on_ok: function () {
+            fetch(url_review_delete, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application.json',
                     'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify({
-                    'id': value
+                    'id': elem.value
                 })
+            }).then(response => response.json()).then(data => {
+                if (data === 'Success') {
+                    elem.parentElement.parentElement.parentElement.removeChild(elem.parentElement.parentElement)
+                }
             })
-            return await data.json()
         }
     })
 }))

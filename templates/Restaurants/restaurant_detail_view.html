@@ -4,129 +4,121 @@
 {% block content %}
     <input type="hidden" name="restaurant_id_input" value='{{ object.id }}'>
     {% if object.owner.username == user.username %}
-        <button class="btn-test draw-border">
-            <a href={% url 'Restaurants:update_restaurant' object.id %}> Update Restaurant</a>
-        </button>
+        {# TODO #}
+        <div id="Actions_owner_div">
+            <button class="btn-test draw-border">Update Restaurant</button>
+            <button class="btn-test draw-border" id="add_menu_button"> Add menu</button>
+        </div>
+        <div id="Action_owner_form"></div>
     {% endif %}
     {% if  object.menu %}
         {% for menu in object.menu.all %}
-            Pa
             <section id='section_inside_menu{{ menu.id }}' class="p-4 bg-white shadow">
                 <div class="row">
                     <h4> {{ menu.type }} </h4>
-                    <div>
-                        {% if object.owner.username == user.username %}
-                            <button class="btn-test draw-border" name="button_show_form_section" value="{{ menu.id }}">Add Section</button>
-                            <button class="btn-test draw-border">Delete Menu</button>
-                        {% endif %}
-                    </div>
+                    {% if object.owner.username == user.username %}
+                        <button class="btn-test draw-border" name="button_show_form_section" value="{{ menu.id }}">
+                            Add Section
+                        </button>
+                        <button class="btn-test draw-border" name="delete_menu_button" value="{{ menu.id }}">Delete
+                            Menu
+                        </button>
+                    {% endif %}
                 </div>
-                <div>
-                    {% for section in menu.sections.all %}
-                        <section class="p-4 shadow bg-white rounded container">
-                            <div class="row">
-                                <div class=".col-md-4 .col-xs-6 p-2">
-                                    <h5>{{ section.name }}</h5>
-                                </div>
-                                <div class=".col-md-4 .col-xs-6 p-2">
-                                    {% if object.owner.username == user.username %}
-                                        <button class="btn-test draw-border">
-                                            <a href={% url 'Restaurants:Menu:Food:add_food' section.id %}>Add Item</a>
-                                        </button>
-                                        <button class="btn-test draw-border"> Delete Section
-{#                                            <a href={% url 'Restaurants:Menu:delete_section' section.id %}>Delete#}
-{#                                                Section</a>#}
-                                        </button>
-                                        <button class="btn-test draw-border">
-                                        Update section
-{#                                            <a href={% url 'Restaurants:Menu:update_section' section.id %}>Update#}
-{#                                                Section</a>#}
-                                        </button>
-                                    {% endif %}
-                                </div>
+                {% for section in menu.sections.all %}
+                    <section class="p-4 shadow bg-white rounded container">
+                        <div class="row">
+                            <div class=".col-md-4 .col-xs-6 p-2">
+                                <h5>{{ section.name }}</h5>
                             </div>
-                            <div class="row">
-                                {% for item in section.items.all %}
-                                    <div class="skill-card">
-                                        <header class="skill-card__header">
-                                            {% if item.photo %}
-                                                <img alt='Food photo' src="{{ item.photo.url }}" width="200"
-                                                     height="300" class="skill-card__icon">
+                            <div class=".col-md-4 .col-xs-6 p-2">
+                                {% if object.owner.username == user.username %}
+                                    <button class="btn-test draw-border">Add Item</button>
+                                    <button class="btn-test draw-border" name="delete_section_button"
+                                            value="{{ section.id }}"> Delete Section
+                                    </button>
+                                    <button class="btn-test draw-border" name="button_update_section"
+                                            value="{{ section.id }}"> Update section
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for item in section.items.all %}
+                                <div class="skill-card">
+                                    <header class="skill-card__header">
+                                        {% if item.photo %}
+                                            <img alt='Food photo' src="{{ item.photo.url }}" width="200"
+                                                 height="300" class="skill-card__icon">
+                                        {% else %}
+                                            <img alt='Food photo' class="skill-card__icon"
+                                                 src="{% static 'images/basic_business_icon.png' %}">
+                                        {% endif %}
+                                    </header>
+                                    <section class="skill-card__body">
+                                        <h2 class="skill-card__title">{{ item.name }}</h2>
+                                        <span class="skill-card__duration">Ingredients</span>
+                                        <ul class="skill-card__knowledge">
+                                            <li>{% if item.discount > 0 %}
+                                                <p class="card-text"> Price:
+                                                    <strong>
+                                                        <del>{{ item.price }}</del>
+                                                    </strong>
+                                                    <strong>
+                                                        <ins style="color: red">{{ item.sell_price }}</ins>
+                                                    </strong>
+                                                </p>
+                                                <p class="card-text">Discount: <strong
+                                                        style="color: red"> {{ item.discount }}% </strong>
+                                                </p>
                                             {% else %}
-                                                <img alt='Food photo' class="skill-card__icon"
-                                                     src="{% static 'images/basic_business_icon.png' %}">
-                                            {% endif %}
-                                        </header>
-                                        <section class="skill-card__body">
-                                            <h2 class="skill-card__title">{{ item.name }}</h2>
-                                            <span class="skill-card__duration">Ingredients</span>
-                                            <ul class="skill-card__knowledge">
-                                                <li>{% if item.discount > 0 %}
-                                                    <p class="card-text"> Price:
-                                                        <strong>
-                                                            <del>{{ item.price }}</del>
-                                                        </strong>
-                                                        <strong>
-                                                            <ins style="color: red">{{ item.sell_price }}</ins>
-                                                        </strong>
-                                                    </p>
-                                                    <p class="card-text">Discount: <strong
-                                                            style="color: red"> {{ item.discount }}% </strong>
-                                                    </p>
-                                                {% else %}
-                                                    <p class="card-text">
-                                                        <strong>Price: {{ item.sell_price }}</strong>
-                                                    </p>
-                                                {% endif %}</li>
-                                                <li>
-                                                    {% if object.owner.username == user.username %}
-                                                        <button class="btn-test draw-border">
-                                                            <a href= {% url "Restaurants:Menu:Food:update_item" item.id %}>
-                                                                Update Item </a>
+                                                <p class="card-text">
+                                                    <strong>Price: {{ item.sell_price }}</strong>
+                                                </p>
+                                            {% endif %}</li>
+                                            <li>
+                                                {% if object.owner.username == user.username %}
+                                                    <button class="btn-test draw-border">
+                                                        <a href= {% url "Restaurants:Menu:Food:update_item" item.id %}>
+                                                            Update Item </a>
+                                                    </button>
+                                                    <button class="btn-test draw-border">
+                                                        <a href= {% url "Restaurants:Menu:Food:delete_item" item.id %}>
+                                                            Delete Item </a>
+                                                    </button>
+                                                {% endif %}
+                                            </li>
+                                            <li>
+                                                {# ITEM: Select the quantity form #}
+                                                <form id="{{ item.id }} form_quantity" class="form-group">
+                                                    <div class="row">
+                                                        <label>
+                                                            Number of items <input name="quantity_item"
+                                                                                   type="number"
+                                                                                   class="form-control input-sm"
+                                                                                   placeholder="{{ orders|contains_order:item }}"
+                                                                                   value="{{ orders|contains_order:item }}">
+                                                        </label>
+                                                        <button class="btn-test draw-border"
+                                                                name="button-add-cart"
+                                                                data-action="add"
+                                                                data-product={{ item.id }}>
+                                                            Add to cart!
                                                         </button>
-                                                        <button class="btn-test draw-border">
-                                                            <a href= {% url "Restaurants:Menu:Food:delete_item" item.id %}>
-                                                                Delete Item </a>
-                                                        </button>
-                                                    {% endif %}
-                                                </li>
-                                                <li>
-                                                    {# ITEM: Select the quantity form #}
-                                                    <form id="{{ item.id }} form_quantity" class="form-group">
-                                                        <div class="row">
-                                                            <label>
-                                                                Number of items <input name="quantity_item"
-                                                                                       type="number"
-                                                                                       class="form-control input-sm"
-                                                                                       placeholder="{{ orders|contains_order:item }}"
-                                                                                       value="{{ orders|contains_order:item }}">
-                                                            </label>
-                                                            <button class="btn-test draw-border"
-                                                                    name="button-add-cart"
-                                                                    data-action="add"
-                                                                    data-product={{ item.id }}>
-                                                                Add to cart!
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </section>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </section>
-                    {% endfor %}
-                </div>
+                                                    </div>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </section>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endfor %}
             </section>
         {% endfor %}
     {% else %}
         <p>There are no menus at the moment</p>
-    {% endif %}
-    {% if object.owner.username == user.username %}
-        <button class="btn-test draw-border">
-            <a href={% url 'Restaurants:Menu:add_menu' object.id %}> Add menu</a>
-        </button>
     {% endif %}
     <h3><strong>Reviews</strong></h3>
     {# REVIEW ADD #}
@@ -139,7 +131,7 @@
     {% if object.reviews.all %}
         <div class="row" id="reviews_div">
             {% for review in object.reviews.all %}
-                <div class="card m-2 shadow rounded" style="max-width: 540px;">
+                <div class="card m-2 shadow rounded">
                     {% if review.author.profile.main_image %}
                         {{ review.author.profile.main_image.url }}
                         <img alt='Profile pic' src="{{ review.author.profile.main_image.url }}"
@@ -154,24 +146,17 @@
                             <strong>Mark: {{ review.mark }}/5</strong>
                         </h5>
                         <p>
-                            <button id="{{ review.id }}review_like_button"
-                                    value="{{ review.id }}"
-                                    name="review_like_button"
-                                    class="btn-test draw-border">Like!
+                            <button value="{{ review.id }}" name="review_like_button" class="btn-test draw-border">
+                                Like!
                             </button>
-                            <label class="m-1" id="{{ review.id }}review_label">
-                                {{ review.likes.count }} - {{ review.dislikes.count }}
-                            </label>
-                            <button id="{{ review.id }}review_dislike_button"
-                                    name="review_dislike_button"
-                                    value="{{ review.id }}"
-                                    class="btn-test draw-border">Dislike!>
+                            <label class="m-1" id="{{ review.id }}review_label">{{ review.likes.count }}
+                                - {{ review.dislikes.count }}</label>
+                            <button name="review_dislike_button" value="{{ review.id }}" class="btn-test draw-border">
+                                Dislike!>
                             </button>
                         </p>
-                        <button id="{{ review.id }}review_delete_button"
-                                name="review_delete_button"
-                                value="{{ review.id }}"
-                                class="btn-test draw-border">Delete!
+                        <button name="review_delete_button" value="{{ review.id }}" class="btn-test draw-border">
+                            Delete!
                         </button>
                         <p class="card-text">Author:<a href={% url 'Profile:see_profile' review.author.id %}>
                             {{ review.author }}</a></p>
@@ -190,8 +175,10 @@
     <script async type="text/javascript" src={% static 'javascript/review.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/Form_review.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/form_section.js' %}></script>
+    <script async type="text/javascript" src={% static 'javascript/Menus.js' %}></script>
     <script async type="text/javascript">
-        let restaurant_id = {{ object.id }}
+        let restaurant_id =
+        {{ object.id }}
     </script>
     <!-- HTML !-->
 {% endblock %}

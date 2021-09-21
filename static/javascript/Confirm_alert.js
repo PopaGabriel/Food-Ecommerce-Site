@@ -37,24 +37,17 @@ const Confirm = {
         })
 
         const btnClose = template.content.querySelector('.confirm__close');
-        btnClose.addEventListener('click', () => {
-            options.on_cancel()
-            this.close(confirmEl)
-        })
-
         const btnCancel = template.content.querySelector('.confirm__button--cancel');
-        btnCancel.addEventListener('click', () => {
-            options.on_cancel()
-            this.close(confirmEl)
-        })
+        [btnClose, btnCancel].forEach(item =>
+            item.addEventListener('click', () => {
+                options.on_cancel()
+                this.close(confirmEl)
+            })
+        )
 
         const btnOk = template.content.querySelector('.confirm__button--ok');
-        btnOk.addEventListener('click', async () => {
-            let deleted = await options.on_ok()
-            if (deleted === 'Deleted') {
-                let delete_button = document.getElementById(options.value + "review_delete_button")
-                delete_button.parentElement.parentElement.parentElement.removeChild(delete_button.parentElement.parentElement)
-            }
+        btnOk.addEventListener('click', () => {
+            options.on_ok()
             this.close(confirmEl)
         })
 

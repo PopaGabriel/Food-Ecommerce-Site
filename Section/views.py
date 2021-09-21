@@ -11,22 +11,37 @@ from Menu.models import Menu
 
 @login_required()
 def SectionAddView(request):
-    try:
-        data = json.loads(request.body)
-        Section.objects.create(name=data['title'], menu=Menu.objects.get(id=data['menu'])).save()
-        return JsonResponse('Success', safe=False)
-    except ObjectDoesNotExist:
-        return JsonResponse('Failure', safe=False)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            Section.objects.create(name=data['title'], menu=Menu.objects.get(id=data['menu'])).save()
+            return JsonResponse('Success', safe=False)
+        except ObjectDoesNotExist:
+            return JsonResponse('Failure', safe=False)
 
-# class DeleteSectionView(LoginRequiredMixin, DeleteView):
-#     model = Section
-#     template_name = 'menu/section_delete.html'
-#
-#     def get_success_url(self):
-#         return reverse('home')
-#
-#
-# class UpdateSectionView(LoginRequiredMixin, UpdateView):
-#     model = Section
-#     fields = ['name']
-#     template_name = 'menu/section_update.html'
+
+@login_required()
+def SectionDeleteView(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            Section.objects.get(id=data['id']).delete()
+            return JsonResponse('Success', safe=False)
+
+        except ObjectDoesNotExist:
+            return JsonResponse('Error', safe=False)
+
+
+@login_required()
+def SectionUpdateView(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            section = Section.objects.get(id=data['id'])
+            section.name = data['name']
+            section.save()
+
+            return JsonResponse('Success', safe=False)
+
+        except ObjectDoesNotExist:
+            return JsonResponse('Error', safe=False)

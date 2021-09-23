@@ -14,4 +14,5 @@ urlpatterns = [
     path('profile/<int:pk>/', include('Profile.urls')),
     path('likes/', include('Likes&Dislikes.urls')),
     path('section/', include('Section.urls')),
+    path('ingredients/', include('Ingredients.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

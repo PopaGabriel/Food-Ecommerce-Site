@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'Checkout',
     'Comments',
     'Section',
+    'Ingredients'
 ]
 
 MIDDLEWARE = [

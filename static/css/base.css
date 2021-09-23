@@ -10,9 +10,15 @@
 .hide {
     visibility: hidden;
     opacity: 0;
-    max-height: 0px;
+    max-height: 0;
     transition: max-height 0.3s, opacity 0.3s, visibility 0.3s linear;
 }
-body {
-    background: aliceblue;
-}
+/*body {*/
+/*    background: #030e12;*/
+/*}*/
+/*div {*/
+
+/*}*/
+/*section {*/
+/*    background: #5bccf6;*/
+/*}*/

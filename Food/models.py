@@ -3,21 +3,15 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
-class Ingredients(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
 class MenuItem(models.Model):
     class AdultOriented(models.IntegerChoices):
         Yes = 1, _('Yes')
         No = 0, _('No')
+
     section = models.ForeignKey('Section.Section',
                                 on_delete=models.CASCADE,
                                 related_name='items')
-    ingredients = models.ManyToManyField('Ingredients')
+    ingredients = models.ManyToManyField('Ingredients.Ingredient', related_name='ingredients')
 
     is_for_adults = models.IntegerField(choices=AdultOriented.choices,
                                         default=AdultOriented.No)

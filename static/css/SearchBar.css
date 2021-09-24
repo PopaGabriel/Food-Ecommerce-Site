@@ -70,6 +70,7 @@
     max-height: 250px;
     overflow-y: auto;
     visibility: hidden;
+    background: #58afd1;
     opacity: 0;
     transition: visibility 0.1s, opacity 0.1s;
 }
@@ -96,3 +97,14 @@
 .search__result:not(:last-of-type) {
     border-bottom: 1px solid #eeeeee;
 }
+
+.search__title {
+    /*background: darkgrey;*/
+    display: block;
+    text-align: center;
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }

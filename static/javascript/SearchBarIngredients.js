@@ -1,15 +1,21 @@
-class InstantSearch {
+class InstantSearchIngredients {
     constructor(instant_search, options) {
         this.options = options;
         this.elements = {
             main: instant_search,
-            input: instant_search.querySelector(".search__input"),
             resultContainer: document.createElement("div"),
         }
+        let search_input = document.createElement("div");
+        search_input.classList.add("search__input-container");
+
+        [this.createInput(), this.create_icon()].forEach(elem => search_input.appendChild(elem));
+        instant_search.appendChild(search_input);
+
         this.elements.resultContainer.classList.add("search__results-container");
         this.elements.main.classList.toggle("search--loading", false)
         this.elements.main.appendChild(this.elements.resultContainer);
-        this.addListeners()
+        this.elements["input"] = search_input.querySelector(".search__input");
+        this.addListeners();
     }
 
     addListeners() {
@@ -45,6 +51,22 @@ class InstantSearch {
         })
     }
 
+    createInput() {
+        const input = document.createElement("input");
+        input.classList.add("search__input");
+        input.type = "text";
+        input.placeholder = "Search ingredients";
+        input.spellcheck = false;
+        return input;
+    }
+
+    create_icon() {
+        const icon = document.createElement("i");
+        icon.textContent = "search";
+        ["material-icons", "search-input__icon"].forEach(elem => icon.classList.add(elem));
+        return icon;
+    }
+
     performSearch(query) {
         this.elements.main.classList.toggle("search--loading", true)
         return fetch(this.options["searchURL"] + "/" + query, {
@@ -77,4 +99,4 @@ class InstantSearch {
     }
 }
 
-export default InstantSearch;
+export default InstantSearchIngredients;

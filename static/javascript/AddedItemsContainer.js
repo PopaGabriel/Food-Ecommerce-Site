@@ -7,7 +7,7 @@ class ContainerAddedIngredients {
             resultContainer: document.createElement("div")
         }
         this.listResults = [];
-        this.elements.resultContainer.classList.add("search");
+        ["search__ingredients-container", "search__ingredients-container--visible"].forEach(elem => this.elements.resultContainer.classList.add(elem));
         this.elements.resultTitle.classList.add("search__title");
         this.elements.resultTitle.innerText = options["title"];
 
@@ -24,15 +24,22 @@ class ContainerAddedIngredients {
         resultElem.classList.add("search__result");
         resultElem.addEventListener("click", () => {
             if (resultElem.dataset.selected === "true") {
+                resultElem.classList.remove("background_white")
                 resultElem.dataset.selected = "false";
                 this.listResults.splice(this.listResults.indexOf(resultElem, 1))
             } else {
+                resultElem.classList.add("background_white")
                 this.listResults.push(resultElem)
                 resultElem.dataset.selected = "true";
             }
         })
 
         this.elements.resultContainer.appendChild(resultElem)
+    }
+
+    removeSelected() {
+        while (this.listResults.length > 0)
+            this.elements.resultContainer.removeChild(this.listResults.pop())
     }
 }
 

@@ -16,6 +16,7 @@ let searchIngredientsContainer = document.createElement("div");
 let result = new ContainerAddedIngredients(searchIngredientsContainer, {title:"Added ingredients"})
 
 let searchAddComponent = new SearchAddedIngredients({search: search, result: result})
+new AddItemComponent({ingredients: searchAddComponent});
 
-document.body.appendChild(searchAddComponent.elements.main)
+// document.body.appendChild(searchAddComponent.elements.main)
 console.log()

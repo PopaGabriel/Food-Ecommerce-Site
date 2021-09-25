@@ -1,3 +1,5 @@
+@import "addElementForm.css";
+
 .search {
     position: relative;
     max-width: 250px;
@@ -33,10 +35,10 @@
         width: 15%;
     }
     50% {
-        width: 100%;
+        width: 50%;
     }
     100% {
-        width: 15%;
+        width: 90%;
     }
 }
 
@@ -67,7 +69,7 @@
 }
 
 .search__results-container {
-    max-height: 250px;
+    max-height: 100px;
     overflow-y: auto;
     visibility: hidden;
     background: #58afd1;
@@ -83,15 +85,17 @@
 .search__result {
     display: block;
     color: #333333;
-    text-decoration: none;
-    padding: 10px;
+    max-height: 40px;
+    max-width: 100%;
+    text-align: center;
     font-size: 1.1em;
     cursor: pointer;
     font-weight: bold;
+    background: #58afd1;
 }
 
 .search__result:hover {
-    background: #eeeeee;
+    background: white;
 }
 
 .search__result:not(:last-of-type) {
@@ -104,7 +108,60 @@
     text-align: center;
 }
 
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
+.background_red {
+    background: red;
+}
+
+.background_white {
+    background: white;
+}
+
+.evenly_spaced {
+    flex-flow: wrap;
+    justify-content: space-around;
+}
+
+.material-icons.md-18 {
+    font-size: 18px;
+}
+
+.material-icons.md-24 {
+    font-size: 24px;
+}
+
+.material-icons.md-36 {
+    font-size: 36px;
+}
+
+.material-icons.md-48 {
+    font-size: 48px;
+}
+
+.m-1 {
+    margin: 1px;
+}
+
+.input_test {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    background: none;
+    outline: none;
+    resize: none;
+    border: 0;
+    font-family: sans-serif;
+    transition: all .3s;
+    border-bottom: 2px solid black;
+}
+
+.input_test:focus {
+    border-bottom: 2px solid #78788c
+}
+
+.p_test:before {
+    content: attr(type);
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #5a5a5a
+}

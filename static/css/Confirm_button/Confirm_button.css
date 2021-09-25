@@ -76,6 +76,8 @@
 
 .confirm__content {
     line-height: 1.8em;
+    width: 100%;
+    max-width: 600px;
 }
 
 .confirm__buttons {

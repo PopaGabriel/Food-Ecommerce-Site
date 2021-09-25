@@ -7,6 +7,7 @@ class SearchAddedIngredients {
             connection: this.createConnection(),
         };
         this.elements.main.classList.add("row");
+        this.elements.main.classList.add("parent_ingredient_form");
         [this.elements.search.elements.main, this.elements.connection, this.elements.result.elements.main].forEach(elem => this.elements.main.appendChild(elem));
     }
 
@@ -39,12 +40,15 @@ class SearchAddedIngredients {
             let id = this.elements.search.elements.input.placeholder;
             let name = this.elements.search.elements.input.value;
 
-            this.elements.result.addResultElement([id, name])
+            this.elements.result.addResultElement([id, name]);
             this.elements.search.elements.input.placeholder = "Search for ingredients";
             this.elements.search.elements.input.value = "";
-
+        })
+        removeIngredient.addEventListener('click', ()=>{
+            this.elements.result.removeSelected();
         })
     }
+
 }
 
 export default SearchAddedIngredients

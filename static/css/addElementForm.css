@@ -1,9 +1,9 @@
 .parent_ingredient_form {
-    margin: 10px;
+    margin-top: 4px;
     padding: 5px;
-    border: 0.5px solid lightgrey;
+    max-height: 200px;
     box-sizing: border-box;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    justify-content: space-around;
 }
 
 .base_add_ingredient_form {
@@ -21,4 +21,13 @@
 
 .overflow-auto {
     overflow: auto;
+}
+
+.small_button {
+    border: none;
+    /*background: none;*/
+    margin: 2px;
+}
+.reverse {
+    justify-content: flex-end;
 }

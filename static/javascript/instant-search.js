@@ -12,8 +12,7 @@ let searchIngredientsBar = document.createElement("div");
 ["search", "search--loading", "search__ingredients-container"].forEach(elem => searchIngredientsBar.classList.add(elem));
 let search = new InstantSearchIngredients(searchIngredientsBar, {searchURL: url_ingredients});
 
-let searchIngredientsContainer = document.createElement("div");
-let result = new ContainerAddedIngredients(searchIngredientsContainer, {title:"Added ingredients"})
+let result = new ContainerAddedIngredients(document.createElement("div"), {title:"Added ingredients"})
 
 let searchAddComponent = new SearchAddedIngredients({search: search, result: result})
 new AddItemComponent({ingredients: searchAddComponent});

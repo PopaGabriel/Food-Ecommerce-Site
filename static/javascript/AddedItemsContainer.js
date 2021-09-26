@@ -7,9 +7,19 @@ class ContainerAddedIngredients {
             resultContainer: document.createElement("div")
         }
         this.listResults = [];
+        ["search", "search__ingredients-container"].forEach(elem => base.classList.add(elem));
         ["search__ingredients-container", "search__ingredients-container--visible"].forEach(elem => this.elements.resultContainer.classList.add(elem));
-        this.elements.resultTitle.classList.add("search__title");
-        this.elements.resultTitle.innerText = options["title"];
+
+        this.elements.resultTitle.classList.add("search__input-container");
+
+        let title = document.createElement("input");
+        title.classList.add("search__input")
+        title.type = "text";
+        title.spellcheck = false;
+        title.disabled = true;
+        title.placeholder = "Added ingredients";
+
+        this.elements.resultTitle.appendChild(title);
 
         [this.elements.resultTitle, this.elements.resultContainer].forEach(elem => this.elements.main.appendChild(elem))
     }
@@ -35,6 +45,10 @@ class ContainerAddedIngredients {
         })
 
         this.elements.resultContainer.appendChild(resultElem)
+    }
+
+    get Ingredients() {
+        return this.elements.resultContainer.children;
     }
 
     removeSelected() {

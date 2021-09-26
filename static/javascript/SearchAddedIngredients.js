@@ -16,21 +16,22 @@ class SearchAddedIngredients {
         main_part.classList.add("coll");
 
         let addIngredient = document.createElement("button");
-        addIngredient.innerText = "Add Ingredient";
-        addIngredient.classList.add("btn-test")
-        addIngredient.classList.add("draw-border")
+        addIngredient.classList.add("small_button")
+
+        let icon_add = document.createElement("i");
+        icon_add.classList.add("material-icons");
+        icon_add.textContent = "add";
+        addIngredient.appendChild(icon_add);
 
         let removeIngredient = document.createElement("button");
-        removeIngredient.innerText = "Remove Ingredient";
-        removeIngredient.classList.add("btn-test")
-        removeIngredient.classList.add("draw-border")
+        removeIngredient.classList.add("small_button")
 
-        let icon = document.createElement("i");
-        icon.classList.add("material-icons");
-        icon.classList.add("md-36");
-        icon.textContent = "compare_arrows";
+        let icon_rem = document.createElement("i");
+        icon_rem.classList.add("material-icons");
+        icon_rem.textContent = "remove";
+        removeIngredient.appendChild(icon_rem);
 
-        [removeIngredient, icon, addIngredient].forEach(elem => main_part.appendChild(elem))
+        [removeIngredient, addIngredient].forEach(elem => main_part.appendChild(elem))
         this.addListenersButtons(addIngredient, removeIngredient)
         return main_part;
     }
@@ -48,7 +49,9 @@ class SearchAddedIngredients {
             this.elements.result.removeSelected();
         })
     }
-
+    get Ingredients() {
+        return this.elements.result.Ingredients;
+    }
 }
 
 export default SearchAddedIngredients

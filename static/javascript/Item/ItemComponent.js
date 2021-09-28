@@ -1,4 +1,4 @@
-const add_item_url = '/Restaurants/Menu/Food/get_basic_item'
+const add_item_url = "/Restaurants/Menu/Food/get_basic_item";
 
 class ItemComponent {
     constructor(options) {
@@ -7,118 +7,115 @@ class ItemComponent {
             main: document.createElement("div"),
             head: this.createHead(""),
             body: this.createBody(),
-            command: document.createElement("div")
+            command: this.createCommand(),
         };
-        ["skill-card"].forEach(elem => this.elements.main.classList.add(elem));
-        [this.elements.head, this.elements.body].forEach(elem => this.elements.main.appendChild(elem));
+        ["skill-card"].forEach((elem) => this.elements.main.classList.add(elem));
+        [this.elements.head, this.elements.body].forEach((elem) => this.elements.main.appendChild(elem));
+
         document.body.appendChild(this.elements.main);
+
+        this.addEventListeners()
     }
 
     createBody() {
         const body = document.createElement("div");
-        ["skill-card__body"].forEach(elem => body.classList.add(elem));
-        [this.createTitle(), this.createDescription(), this.createIngredients(), this.createPrice()].forEach(elem => body.appendChild(elem));
+        ["skill-card__body"].forEach((elem) => body.classList.add(elem));
+        [
+            this.createTitle(),
+            this.createCommand(),
+            // this.createDescription(),
+            // this.createIngredients(),
+            // this.createPrice(),
+        ].forEach((elem) => body.appendChild(elem));
 
         return body;
     }
 
     createTitle() {
         const title_div = document.createElement("div");
-        ["content_centered"].forEach(elem => title_div.classList.add(elem));
+        ["content_centered"].forEach((elem) => title_div.classList.add(elem));
 
         const title = document.createElement("h2");
-        ["skill-card__title"].forEach(elem => title.classList.add(elem));
+        ["skill-card__title"].forEach((elem) => title.classList.add(elem));
         title.textContent = this.options.name;
 
-        title_div.appendChild(title);
+        const price = document.createElement("p");
+        ["info_card"].forEach((elem) => price.classList.add(elem));
+        price.textContent = this.options.price + " lei";
+        [title, price].forEach((elem) => title_div.appendChild(elem));
+
+        if (this.options.discount > 0) {
+            const real_price = document.createElement("p");
+            ["info_card_sale"].forEach((elem) => real_price.classList.add(elem));
+            real_price.textContent = this.options.realPrice + " lei";
+            [real_price].forEach((elem) => title_div.appendChild(elem));
+
+            price.style.textDecoration = "line-through";
+            ["light-text"].forEach((cls) => price.classList.add(cls));
+        }
 
         return title_div;
     }
 
-    createDescription() {
-        const description = document.createElement("p");
-        ["skill-card__duration", "content_centered"].forEach(elem => description.classList.add(elem));
-        description.textContent = "\"" + this.options.description + "\"";
+    createCommand() {
+        const body = document.createElement("div");
+        ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
 
-        return description
-    }
+        const deleteButton = document.createElement("button");
+        ["btn-test", "draw-border"].forEach((elem) => deleteButton.classList.add(elem));
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", ()=> {
+           console.log("yes");
+        });
 
-    createIngredients() {
-        const ingredients_div = document.createElement("div");
-        ["row"].forEach(elem => ingredients_div.classList.add(elem));
+        [deleteButton].forEach((elem) => body.appendChild(elem));
 
-        const title = document.createElement("p");
-        ["ml-3"].forEach(cls => title.classList.add(cls));
-        title.textContent = "Ingredients: ";
-        ingredients_div.appendChild(title);
-
-        this.options.ingredients.forEach(elem => {
-            const aux = document.createElement("p");
-            aux.textContent = elem;
-            ["ml-3"].forEach(cls => aux.classList.add(cls));
-            ingredients_div.appendChild(aux);
-        })
-
-        return ingredients_div;
-    }
-
-    createPrice() {
-        const priceDiv = document.createElement("div");
-        ["skill-card__body", "row", "ml-1"].forEach(elem => priceDiv.classList.add(elem));
-        priceDiv.textContent = "Price: ";
-
-        const price = document.createElement("p");
-        ["ml-1"].forEach(cls => price.classList.add(cls));
-        price.textContent = this.options.realPrice;
-
-        //TODO
-        // Make it look good
-        if (this.options.discount > 0) {
-            const discount = document.createElement("p");
-            discount.textContent = "-" + this.options.discount + "%";
-            discount.style.color = "red";
-            price.style.textDecoration = "line-through";
-            [price, discount].forEach(elem => priceDiv.appendChild(elem));
-        } else
-            [price].forEach(elem => priceDiv.appendChild(elem));
-
-        return priceDiv;
+        return body;
     }
 
     createHead(image) {
         const header = document.createElement("div");
-        ["skill-card__header"].forEach(elem => header.classList.add(elem));
+        ["skill-card__header"].forEach((elem) => header.classList.add(elem));
 
         const imageAux = document.createElement("img");
-        ["skill-card__icon"].forEach(elem => imageAux.classList.add(elem));
+        ["skill-card__icon"].forEach((elem) => imageAux.classList.add(elem));
 
         if (image === "")
             fetch(add_item_url, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application.json"
+                    "Content-Type": "application.json",
                 },
-            }).then(response => response.json()).then(data => imageAux.src = data);
-        else
-            imageAux.src = image;
+            })
+                .then((response) => response.json())
+                .then((data) => (imageAux.src = data));
+        else imageAux.src = image;
 
-        [imageAux].forEach(elem => header.appendChild(elem));
+        [imageAux].forEach((elem) => header.appendChild(elem));
 
         if (this.options.discount > 0) {
             const discount = document.createElement("span");
-            ["product-label-discount"].forEach(elem => discount.classList.add(elem));
+            ["product-label-discount"].forEach((elem) =>
+                discount.classList.add(elem)
+            );
             discount.textContent = "-" + this.options.discount + "%";
-            [discount].forEach(elem => header.appendChild(elem));
+            [discount].forEach((elem) => header.appendChild(elem));
         }
 
         if (this.options.is_for_adults === 1) {
             const adult = document.createElement("span");
-            ["product-label-age"].forEach(elem => adult.classList.add(elem));
+            ["product-label-age"].forEach((elem) => adult.classList.add(elem));
             adult.textContent = "+18";
-            [adult].forEach(elem => header.appendChild(adult))
+            [adult].forEach((elem) => header.appendChild(adult));
         }
 
-        return header
+        return header;
+    }
+
+    addEventListeners() {
+        this.elements.head.firstChild.addEventListener("click", () => {
+            console.log(this.options);
+        });
     }
 
     get html() {
@@ -133,5 +130,5 @@ new ItemComponent({
     discount: 11,
     realPrice: 90,
     is_for_adults: 1,
-    description: "Description is a hard job"
-})
+    description: "Description is a hard job",
+});

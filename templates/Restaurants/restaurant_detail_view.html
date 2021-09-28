@@ -178,9 +178,9 @@
     <script async type="text/javascript" src="{% static "javascript/Item/ItemComponent.js" %}"></script>
     {#    <script async src="{% static 'javascript/AddItemForm/instant-search.js' %}" type="module"></script>#}
     <script async type="text/javascript" src={% static 'javascript/Menus.js' %}></script>
+    <script async type="text/javascript" src="{% static 'javascript/Item/EnlargedItemComponent.js' %}"></script>
     <script async type="text/javascript">
-        let restaurant_id =
-        {{ object.id }}
+        let restaurant_id = "{{ object.id }}";
     </script>
     <!-- HTML !-->
 {% endblock %}

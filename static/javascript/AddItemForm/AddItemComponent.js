@@ -1,7 +1,8 @@
-const add_item_url = ''
+const add_item_url = '/Restaurants/Menu/Food/add_item'
 
 class AddItemComponent {
     constructor(options) {
+        this.options = options;
         this.elements = {
             main: document.createElement("div"),
             base: this.createBase(),
@@ -40,8 +41,6 @@ class AddItemComponent {
         confirm_window.appendChild(confirm_content)
 
         this.elements.main.appendChild(confirm_window)
-
-        document.body.appendChild(this.elements.main);
     }
 
     createBase() {
@@ -49,11 +48,12 @@ class AddItemComponent {
 
         let name = this.createInput("name", "text", "Add name", "Title");
         let price = this.createInput("price", "number", "0", "Price");
-        let discount = this.createInput("dicount", "number", "0", "Discount");
+        let discount = this.createInput("discount", "number", "0", "Discount");
         let adult = this.createInput("adult", "checkbox", "I it for adults", "Is for adults");
         adult.value = "adult";
+        let image = this.createInput("image", "file", "Image for food", "Image");
 
-        [name, price, discount, adult].forEach(elem => base.appendChild(elem));
+        [name, price, discount, image, adult].forEach(elem => base.appendChild(elem));
         return base;
     }
 
@@ -89,8 +89,9 @@ class AddItemComponent {
             Array.from(this.elements.ingredients.Ingredients).forEach(elem => ingredients.push(elem.textContent));
 
             const data = this.inputs;
-            data['ingredients'] = ingredients;
-            console.log(data);
+            data["ingredients"] = ingredients;
+            data["section_id"] = this.options.section_id;
+            console.log(JSON.stringify(data));
             fetch(add_item_url, {
                 method: 'POST',
                 headers: {
@@ -133,6 +134,10 @@ class AddItemComponent {
                 list_out[elem.firstChild.childNodes[1].name] = elem.firstChild.childNodes[1].value;
         });
         return list_out;
+    }
+
+    get html() {
+        return this.elements.main;
     }
 }
 

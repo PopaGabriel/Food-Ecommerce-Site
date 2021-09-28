@@ -1,10 +1,15 @@
-const url_add_section = '/section/section_add'
-const url_section_delete = '/section/section_delete'
-const url_section_update = '/section/section_update'
+import createAddItemForm from "./AddItemForm/instant-search.js";
 
-let section_delete_buttons = document.getElementsByName('delete_section_button')
-let button_show_form_section = document.getElementsByName('button_show_form_section')
-let button_update_section = document.getElementsByName('button_update_section')
+const url_add_section = '/section/section_add';
+const url_section_delete = '/section/section_delete';
+const url_section_update = '/section/section_update';
+const url_ingredients = "/ingredients/get_ingredients";
+
+
+let section_delete_buttons = document.getElementsByName('delete_section_button');
+let button_show_form_section = document.getElementsByName('button_show_form_section');
+let button_update_section = document.getElementsByName('button_update_section');
+let buttons_add_item = document.getElementsByName("add_item_button");
 
 button_show_form_section.forEach(item => {
     item.addEventListener('click', (e) => {
@@ -14,7 +19,7 @@ button_show_form_section.forEach(item => {
                 Create_review_form.open({
                     parent_id: 'section_inside_menu' + item.value,
                     html: `<div class="form_create_review">
-                        <div class="confirm__window" >
+                        <div class="confirm__window">
                             <div class="confirm__titlebar">
                                 <span class="confirm__title">Create review</span>
                                 <button class="confirm__close">&times;</button>
@@ -81,4 +86,8 @@ section_delete_buttons.forEach(elem => elem.addEventListener('click', (e) => {
 button_update_section.forEach(elem => elem.addEventListener('click', (e) => {
     e.preventDefault()
 
-}))
+}));
+
+buttons_add_item.forEach(elem => elem.addEventListener("click", () => {
+    elem.parentElement.parentElement.parentElement.appendChild(createAddItemForm(url_ingredients, elem.value).html);
+}));

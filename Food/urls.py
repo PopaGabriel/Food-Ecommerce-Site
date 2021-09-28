@@ -1,12 +1,14 @@
-from django.urls import path, include
+from django.urls import path
 from .views import (AddMenuItemView,
                     DeleteMenuItemView,
-                    UpdateMenuItemView,)
+                    UpdateMenuItemView,
+                    GetBasicImagePhoto)
 
 app_name = 'Food'
 
 urlpatterns = [
-    path('add_item/', AddMenuItemView.as_view(), name='add_food'),
-    path('delete_item/', DeleteMenuItemView.as_view(), name='delete_item'),
+    path('add_item', AddMenuItemView, name='add_food'),
+    path('delete_item', DeleteMenuItemView, name='delete_item'),
     path('update_item/', UpdateMenuItemView.as_view(), name='update_item'),
+    path('get_basic_item', GetBasicImagePhoto, name='basic_item_image'),
 ]

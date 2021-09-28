@@ -19,3 +19,13 @@
     flex-direction: column;
     text-align: center;
 }
+.content_centered {
+    text-align: center;
+    justify-content: center;
+}
+.ml-3 {
+    margin-left: 3px;
+}
+.ml-1 {
+    margin-left: 1px;
+}

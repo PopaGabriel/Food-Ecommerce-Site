@@ -28,12 +28,14 @@
                 {% for section in menu.sections.all %}
                     <section class="p-4 shadow bg-white rounded container">
                         <div class="row">
-                            <div class=".col-md-4 .col-xs-6 p-2">
+                            <div class="p-2">
                                 <h5>{{ section.name }}</h5>
                             </div>
-                            <div class=".col-md-4 .col-xs-6 p-2">
+                            <div class="p-2">
                                 {% if object.owner.username == user.username %}
-                                    <button class="btn-test draw-border">Add Item</button>
+                                    <button name="add_item_button" class="btn-test draw-border"
+                                            value="{{ section.id }}">Add Item
+                                    </button>
                                     <button class="btn-test draw-border" name="delete_section_button"
                                             value="{{ section.id }}"> Delete Section
                                     </button>
@@ -46,18 +48,20 @@
                         <div class="row">
                             {% for item in section.items.all %}
                                 <div class="skill-card">
-                                    <header class="skill-card__header">
+                                    <div class="skill-card__header">
                                         {% if item.photo %}
-                                            <img alt='Food photo' src="{{ item.photo.url }}" width="200"
-                                                 height="300" class="skill-card__icon">
+                                            <img alt='Food photo' src="{{ item.photo.url }}" class="skill-card__icon">
                                         {% else %}
                                             <img alt='Food photo' class="skill-card__icon"
                                                  src="{% static 'images/basic_business_icon.png' %}">
                                         {% endif %}
-                                    </header>
+                                    </div>
                                     <section class="skill-card__body">
                                         <h2 class="skill-card__title">{{ item.name }}</h2>
-                                        <span class="skill-card__duration">Ingredients</span>
+                                    {% if item.decription %}
+                                        <span class="skill-card__duration">{{ item.description }}</span>
+                                    {% endif %}
+                                        <span class="skill-card__duration">{{ item.description }}</span>
                                         <ul class="skill-card__knowledge">
                                             <li>{% if item.discount > 0 %}
                                                 <p class="card-text"> Price:
@@ -78,14 +82,10 @@
                                             {% endif %}</li>
                                             <li>
                                                 {% if object.owner.username == user.username %}
-                                                    <button class="btn-test draw-border">
-                                                        <a href= {% url "Restaurants:Menu:Food:update_item" item.id %}>
-                                                            Update Item </a>
-                                                    </button>
-                                                    <button class="btn-test draw-border">
-                                                        <a href= {% url "Restaurants:Menu:Food:delete_item" item.id %}>
-                                                            Delete Item </a>
-                                                    </button>
+                                                    {# TODO #}
+                                                    <button class="btn-test draw-border">Update Item</button>
+                                                    {# TODO #}
+                                                    <button class="btn-test draw-border">Delete Item</button>
                                                 {% endif %}
                                             </li>
                                             <li>
@@ -174,7 +174,9 @@
     <script async type="text/javascript" src={% static 'javascript/basket.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/review.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/Form_review.js' %}></script>
-    <script async type="text/javascript" src={% static 'javascript/form_section.js' %}></script>
+    <script async type="module" src={% static 'javascript/form_section.js' %}></script>
+    <script async type="text/javascript" src="{% static "javascript/Item/ItemComponent.js" %}"></script>
+    {#    <script async src="{% static 'javascript/AddItemForm/instant-search.js' %}" type="module"></script>#}
     <script async type="text/javascript" src={% static 'javascript/Menus.js' %}></script>
     <script async type="text/javascript">
         let restaurant_id =

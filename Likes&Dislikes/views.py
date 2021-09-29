@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 
-import Reviews.models
+from Reviews.models import Review
 from Restaurants.models import Restaurant
 
 
@@ -39,7 +39,7 @@ def LikeViewReview(request, **kwargs):
     data = json.loads(request.body)
     message = {}
     try:
-        review = Reviews.models.Review.objects.get(id=data['review'])
+        review = Review.objects.get(id=data['review'])
         if data['action'] == 'like':
             if review.likes.filter(id=request.user.id).exists():
                 review.likes.remove(request.user)

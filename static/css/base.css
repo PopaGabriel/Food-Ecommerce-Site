@@ -1,31 +1,46 @@
 .hint {
-    padding: .5em;
-    font-weight: bold;
-    visibility: visible;
-    opacity: 1;
-    max-height: 500px;
-    transition: visibility 0s, opacity 0.3s, max-height 0.6s linear;
+  padding: 0.5em;
+  font-weight: bold;
+  visibility: visible;
+  opacity: 1;
+  max-height: 500px;
+  transition: visibility 0s, opacity 0.3s, max-height 0.6s linear;
 }
 
 .hide {
-    visibility: hidden;
-    opacity: 0;
-    max-height: 0;
-    transition: max-height 0.3s, opacity 0.3s, visibility 0.3s linear;
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
+  transition: max-height 0.3s, opacity 0.3s, visibility 0.3s linear;
 }
 
 .coll {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.reverse {
+  justify-content: flex-end;
 }
 .content_centered {
-    text-align: center;
-    justify-content: center;
+  text-align: center;
+  justify-content: center;
 }
 .ml-3 {
-    margin-left: 3px;
+  margin-left: 3px;
 }
 .ml-1 {
-    margin-left: 1px;
+  margin-left: 1px;
+}
+.special:last-of-type {
+  margin-top: auto;
+}
+.star {
+  color: grey;
+}
+.star_selected {
+  color: yellow;
+}
+.star_select {
+  color: darkgoldenrod;
 }

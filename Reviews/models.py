@@ -41,7 +41,7 @@ class Review(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('Restaurants:detail_restaurant', args=[str(self.restaurant.id)])
 
-    def __str__(self):
+    def __str__(self):        
         return f"Title:{self.title}" \
                f" Author:{self.body} " \
                f"is_anonymous:{self.is_anonymous} " \

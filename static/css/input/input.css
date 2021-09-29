@@ -1,0 +1,8 @@
+.input_add_item {
+  size: 1;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-width: 4;
+  width: 80px;
+}

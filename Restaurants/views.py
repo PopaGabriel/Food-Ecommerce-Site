@@ -58,7 +58,8 @@ class DetailRestaurantView(DetailView):
         context = super(DetailRestaurantView, self).get_context_data(**kwargs)
         try:
             restaurant = Restaurant.objects.get(id=self.kwargs['pk'])
-            food_basket = Basket.objects.get(restaurant=restaurant, user=self.request.user, sent=False)
+            food_basket = Basket.objects.get(
+                restaurant=restaurant, user=self.request.user, sent=False)
             ordered = OrderFood.objects.filter(food_basket=food_basket)
         except ObjectDoesNotExist:
             ordered = OrderFood.objects.none()

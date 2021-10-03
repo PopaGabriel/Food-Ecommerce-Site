@@ -45,7 +45,7 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             {% for item in section.items.all %}
                                 <div class="skill-card">
                                     <div class="skill-card__header">
@@ -112,7 +112,7 @@
                                     </section>
                                 </div>
                             {% endfor %}
-                        </div>
+                        </div> -->
                     </section>
                 {% endfor %}
             </section>
@@ -175,10 +175,10 @@
     <script async type="text/javascript" src={% static 'javascript/review.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/Form_review.js' %}></script>
     <script async type="module" src={% static 'javascript/form_section.js' %}></script>
-    <script async type="text/javascript" src="{% static "javascript/Item/ItemComponent.js" %}"></script>
-    {#    <script async src="{% static 'javascript/AddItemForm/instant-search.js' %}" type="module"></script>#}
+    <!-- <script async type="text/javascript" src="{% static "javascript/Item/ItemComponent.js" %}"></script> -->
+    <!-- {#    <script async src="{% static 'javascript/AddItemForm/instant-search.js' %}" type="module"></script>#} -->
     <script async type="text/javascript" src={% static 'javascript/Menus.js' %}></script>
-    <script async type="text/javascript" src="{% static 'javascript/Item/EnlargedItemComponent.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/Item/EnlargedItemComponent.js' %}"></script>
     <script async type="text/javascript">
         let restaurant_id = "{{ object.id }}";
     </script>

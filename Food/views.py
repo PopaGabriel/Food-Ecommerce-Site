@@ -21,7 +21,8 @@ def AddMenuItemView(request):
             menu_item = MenuItem.objects.create(price=int(data["price"]),
                                                 discount=int(data["discount"]),
                                                 name=data["name"],
-                                                section=Section.objects.get(id=data["section_id"]),
+                                                section=Section.objects.get(
+                                                    id=data["section_id"]),
                                                 is_for_adults=0 if not data["adult"] else 1)
             if data["image"] != "" and any(data["image"].endswith(elem) for elem in [".jpg", ".png"]):
                 menu_item.photo = data["image"]
@@ -48,10 +49,15 @@ def DeleteMenuItemView(request):
         return JsonResponse("success", safe=False)
 
 
-@login_required()
 def GetBasicImagePhoto(request):
     if request.method == "GET":
         return JsonResponse(MEDIA_URL + "images/Salam.jpg", safe=False)
+
+
+def GetItems(request, restaurant_id):
+    if request == "GET":
+        print(MenuItem.objects.get(restaurant_id=restaurant_id))
+        return JsonResponse("yes")
 
 
 class UpdateMenuItemView(LoginRequiredMixin, UpdateView):

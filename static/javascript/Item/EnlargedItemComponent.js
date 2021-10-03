@@ -1,3 +1,5 @@
+const add_item_url = "/Restaurants/Menu/Food/get_basic_item";
+
 class EnlargedItemComponent {
   constructor(options) {
     this.options = options;
@@ -14,7 +16,6 @@ class EnlargedItemComponent {
       this.elements.main.appendChild(elem)
     );
     document.body.appendChild(this.html);
-    document.body.appendChild(this.createStarSystem());
   }
 
   createInfo() {
@@ -64,10 +65,24 @@ class EnlargedItemComponent {
     const divHead = document.createElement("div");
     ["coll"].forEach((cls) => divHead.classList.add(cls));
 
-    const image = document.createElement("img");
-    image.src = this.options.image;
+    const imageAux = document.createElement("img");
+    if (this.options.image === "")
+      fetch(add_item_url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application.json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => (imageAux.src = data));
+    else imageAux.src = this.options.image;
 
-    [image, this.createTitle()].forEach((elem) => divHead.appendChild(elem));
+    imageAux.addEventListener("click", () => {
+      this.downgrade();
+    });
+
+    [imageAux, this.createTitle()].forEach((elem) => divHead.appendChild(elem));
+    console.log(divHead);
     return divHead;
   }
 
@@ -79,7 +94,7 @@ class EnlargedItemComponent {
     ["skill-card__title"].forEach((elem) => title.classList.add(elem));
     title.textContent = this.options.name;
 
-    [title, this.createDescription()].forEach((elem) =>
+    [title, this.createStarSystem(), this.createDescription()].forEach((elem) =>
       title_div.appendChild(elem)
     );
     return title_div;
@@ -124,44 +139,58 @@ class EnlargedItemComponent {
 
   createStarSystem() {
     const body = document.createElement("div");
-    ["row"].forEach((elem) => body.classList.add(elem));
+    ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
 
-    const list_stars = [
-      document.createElement("span"),
-      document.createElement("span"),
-      document.createElement("span"),
-      document.createElement("span"),
-      document.createElement("span"),
-    ];
+    const generalRating = document.createElement("p");
+    generalRating.textContent = "(" + this.options.rating + ")";
+
+    const list_stars = [];
+    for (let i = 0; i < 5; i++) list_stars.push(document.createElement("span"));
+
     for (let i = 0; i < list_stars.length; i++) {
       const elem = list_stars[i];
-      elem.classList.add("star", "material-icons");
+      if (i < this.options.rating_user)
+        elem.classList.add("star_selected", "material-icons");
+      else elem.classList.add("star", "material-icons");
       elem.textContent = "star_rate";
 
       elem.addEventListener("mouseenter", () => {
-        for (let i = list_stars.indexOf(elem); i >= 0; i--) {
-          list_stars[i].classList.toggle("star_select", true);
-        }
+        for (let j = list_stars.indexOf(elem); j >= 0; j--)
+          list_stars[j].classList.toggle("star_select", true);
       });
       elem.addEventListener("mouseout", () => {
-        for (let i = list_stars.indexOf(elem); i >= 0; i--) {
-          list_stars[i].classList.toggle("star_select", false);
-        }
+        for (let j = list_stars.indexOf(elem); j >= 0; j--)
+          list_stars[j].classList.toggle("star_select", false);
       });
       elem.addEventListener("click", () => {
-        for (let i = list_stars.indexOf(elem); i >= 0; i--) {
-          list_stars[i].classList.toggle("star_selected", true);
+        if (
+          (elem.classList.contains("star_selected") &&
+            list_stars[list_stars.indexOf(elem) + 1] &&
+            !list_stars[list_stars.indexOf(elem) + 1].classList.contains(
+              "star_selected"
+            )) ||
+          (elem.classList.contains("star_selected") &&
+            list_stars.indexOf(elem) == list_stars.length - 1)
+        ) {
+          for (let j = 0; j < list_stars.length; j++) {
+            list_stars[j].classList.toggle("star_selected", false);
+            list_stars[j].classList.toggle("star", true);
+          }
+          return;
+        }
+        for (let j = list_stars.indexOf(elem); j >= 0; j--) {
+          list_stars[j].classList.toggle("star_select", false);
+          list_stars[j].classList.toggle("star_selected", true);
         }
 
-        for (let i = list_stars.indexOf(elem); i >= 0; i--) {
-          list_stars[i].classList.toggle("star_select", false);
-        }
-        for (let i = list_stars.indexOf(elem) + 1; i < list_stars.length; i++) {
-          list_stars[i].classList.toggle("star_selected", false);
+        for (let j = list_stars.indexOf(elem) + 1; j < list_stars.length; j++) {
+          list_stars[j].classList.toggle("star_selected", false);
+          list_stars[j].classList.toggle("star", true);
         }
       });
       body.appendChild(elem);
     }
+    body.appendChild(generalRating);
     return body;
   }
 
@@ -174,19 +203,227 @@ class EnlargedItemComponent {
     return description;
   }
 
+  downgrade() {
+    // const position = this.html.parentElement.children.indexOf(this.html);
+    // console.log(position);
+    return new ItemComponent(this.options);
+  }
+
   get html() {
     return this.elements.main;
   }
 }
 
-new EnlargedItemComponent({
-  name: "Pizza",
-  price: 100,
-  is_available: false,
-  ingredients: ["Banana", "Apple", "Orange"],
-  discount: 11,
-  realPrice: 90,
-  is_for_adults: 1,
-  description: "Description is a hard job",
-  image: "/media/images/Salam.jpg",
-});
+class ItemComponent {
+  constructor(options) {
+    this.options = options;
+    this.elements = {
+      main: document.createElement("div"),
+      head: this.createHead(""),
+      body: this.createBody(),
+      command: this.createCommand(),
+    };
+    ["skill-card"].forEach((elem) => this.elements.main.classList.add(elem));
+    [this.elements.head, this.elements.body].forEach((elem) =>
+      this.elements.main.appendChild(elem)
+    );
+
+    document.body.appendChild(this.elements.main);
+
+    this.addEventListeners();
+  }
+
+  createBody() {
+    const body = document.createElement("div");
+    ["skill-card__body"].forEach((elem) => body.classList.add(elem));
+    [
+      this.createTitle(),
+      this.createCommand(),
+      // this.createDescription(),
+      // this.createIngredients(),
+      // this.createPrice(),
+    ].forEach((elem) => body.appendChild(elem));
+
+    return body;
+  }
+
+  createTitle() {
+    const title_div = document.createElement("div");
+    ["content_centered"].forEach((elem) => title_div.classList.add(elem));
+
+    const title = document.createElement("h2");
+    ["skill-card__title"].forEach((elem) => title.classList.add(elem));
+    title.textContent = this.options.name;
+
+    const price = document.createElement("p");
+    ["info_card"].forEach((elem) => price.classList.add(elem));
+    price.textContent = this.options.price + " lei";
+    [title, this.createStarSystem(), price].forEach((elem) =>
+      title_div.appendChild(elem)
+    );
+
+    if (this.options.discount > 0) {
+      const real_price = document.createElement("p");
+      ["info_card_sale"].forEach((elem) => real_price.classList.add(elem));
+      real_price.textContent = this.options.realPrice + " lei";
+      [real_price].forEach((elem) => title_div.appendChild(elem));
+
+      price.style.textDecoration = "line-through";
+      ["light-text"].forEach((cls) => price.classList.add(cls));
+    }
+
+    return title_div;
+  }
+
+  createCommand() {
+    const body = document.createElement("div");
+    ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
+
+    const deleteButton = document.createElement("button");
+    ["btn-test", "draw-border"].forEach((elem) =>
+      deleteButton.classList.add(elem)
+    );
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      console.log("yes");
+    });
+
+    [deleteButton].forEach((elem) => body.appendChild(elem));
+
+    return body;
+  }
+
+  createHead() {
+    const header = document.createElement("div");
+    ["skill-card__header"].forEach((elem) => header.classList.add(elem));
+
+    const imageAux = document.createElement("img");
+    ["skill-card__icon"].forEach((elem) => imageAux.classList.add(elem));
+
+    if (this.options.image === "")
+      fetch(add_item_url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application.json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => (imageAux.src = data));
+    else imageAux.src = this.options.image;
+
+    header.appendChild(imageAux);
+
+    if (this.options.discount > 0) {
+      const discount = document.createElement("span");
+      ["product-label-discount"].forEach((elem) =>
+        discount.classList.add(elem)
+      );
+      discount.textContent = "-" + this.options.discount + "%";
+      header.appendChild(discount);
+    }
+
+    if (this.options.is_for_adults === 1) {
+      const adult = document.createElement("span");
+      ["product-label-age"].forEach((elem) => adult.classList.add(elem));
+      adult.textContent = "+18";
+      header.appendChild(adult);
+    }
+
+    return header;
+  }
+
+  createStarSystem() {
+    const body = document.createElement("div");
+    ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
+
+    const generalRating = document.createElement("p");
+    generalRating.textContent = "(" + this.options.rating + ")";
+
+    const list_stars = [];
+    for (let i = 0; i < 5; i++) list_stars.push(document.createElement("span"));
+
+    for (let i = 0; i < list_stars.length; i++) {
+      const elem = list_stars[i];
+      if (i < this.options.rating_user)
+        elem.classList.add("star_selected", "material-icons");
+      else elem.classList.add("star", "material-icons");
+      elem.textContent = "star_rate";
+
+      elem.addEventListener("mouseenter", () => {
+        for (let j = list_stars.indexOf(elem); j >= 0; j--)
+          list_stars[j].classList.toggle("star_select", true);
+      });
+      elem.addEventListener("mouseout", () => {
+        for (let j = list_stars.indexOf(elem); j >= 0; j--)
+          list_stars[j].classList.toggle("star_select", false);
+      });
+      elem.addEventListener("click", () => {
+        if (
+          (elem.classList.contains("star_selected") &&
+            list_stars[list_stars.indexOf(elem) + 1] &&
+            !list_stars[list_stars.indexOf(elem) + 1].classList.contains(
+              "star_selected"
+            )) ||
+          (elem.classList.contains("star_selected") &&
+            list_stars.indexOf(elem) == list_stars.length - 1)
+        ) {
+          for (let j = 0; j < list_stars.length; j++) {
+            list_stars[j].classList.toggle("star_selected", false);
+            list_stars[j].classList.toggle("star", true);
+          }
+          return;
+        }
+        for (let j = list_stars.indexOf(elem); j >= 0; j--) {
+          list_stars[j].classList.toggle("star_select", false);
+          list_stars[j].classList.toggle("star_selected", true);
+        }
+
+        for (let j = list_stars.indexOf(elem) + 1; j < list_stars.length; j++) {
+          list_stars[j].classList.toggle("star_selected", false);
+          list_stars[j].classList.toggle("star", true);
+        }
+      });
+      body.appendChild(elem);
+    }
+    body.appendChild(generalRating);
+    return body;
+  }
+  addEventListeners() {
+    this.elements.head.firstChild.addEventListener("click", () => {
+      this.upgrade();
+    });
+  }
+  upgrade() {
+    new EnlargedItemComponent(this.options);
+    return;
+  }
+  get html() {
+    return this.elements.main;
+  }
+}
+
+// new ItemComponent({
+//   name: "Pizza",
+//   price: 100,
+//   ingredients: ["Banana", "Apple", "Orange"],
+//   discount: 11,
+//   realPrice: 90,
+//   is_for_adults: 1,
+//   description: "Description is a hard job",
+//   image: "",
+// });
+
+// new EnlargedItemComponent({
+//   name: "Pizza",
+//   price: 100,
+//   is_available: false,
+//   ingredients: ["Banana", "Apple", "Orange"],
+//   discount: 11,
+//   realPrice: 90,
+//   is_for_adults: 1,
+//   rating_user: 4,
+//   rating: 3.37,
+//   description:
+//     "Description is a hard job Description is a hard job Description is a hard job Description is a hard job",
+//   image: "",
+// });

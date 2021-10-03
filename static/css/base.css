@@ -25,6 +25,7 @@
 .content_centered {
   text-align: center;
   justify-content: center;
+  inline-size: 14em;
 }
 .ml-3 {
   margin-left: 3px;
@@ -37,10 +38,13 @@
 }
 .star {
   color: grey;
+  cursor: pointer;
 }
 .star_selected {
   color: yellow;
+  cursor: pointer;
 }
 .star_select {
   color: darkgoldenrod;
+  cursor: pointer;
 }

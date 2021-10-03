@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import AnonymousUser
 from django.views.generic import (ListView, CreateView, UpdateView, DetailView)
 from .forms import (CreateRestaurantForm, EditRestaurantForm)
 from django.core.exceptions import ObjectDoesNotExist
@@ -58,8 +59,12 @@ class DetailRestaurantView(DetailView):
         context = super(DetailRestaurantView, self).get_context_data(**kwargs)
         try:
             restaurant = Restaurant.objects.get(id=self.kwargs['pk'])
-            food_basket = Basket.objects.get(
-                restaurant=restaurant, user=self.request.user, sent=False)
+
+            if not self.request.user.is_anonymous:
+                food_basket = Basket.objects.get(
+                    restaurant=restaurant, user=self.request.user, sent=False)
+            else:
+                food_basket = None
             ordered = OrderFood.objects.filter(food_basket=food_basket)
         except ObjectDoesNotExist:
             ordered = OrderFood.objects.none()

@@ -11,17 +11,28 @@ class MenuItem(models.Model):
     section = models.ForeignKey('Section.Section',
                                 on_delete=models.CASCADE,
                                 related_name='items')
-    ingredients = models.ManyToManyField('Ingredients.Ingredient', related_name='ingredients')
+    ingredients = models.ManyToManyField(
+        'Ingredients.Ingredient', related_name='ingredients')
 
     is_for_adults = models.IntegerField(choices=AdultOriented.choices,
                                         default=AdultOriented.No)
     is_available = models.BooleanField(default=True)
-
+    description = models.CharField(max_length=250,
+                                   default="Descriptions are hard")
     name = models.CharField(max_length=100)
     price = models.FloatField(blank=False)
     discount = models.FloatField(default=0)
-    photo = models.ImageField(upload_to='images/',
+    image = models.ImageField(upload_to='images/',
                               default='images/Salam.jpg')
+
+    @property
+    def getRatings(self) -> float:
+        sum = 0
+        for rating in self.ratings.all():
+            sum += rating.mark
+        if len(self.ratings.all()) == 0:
+            return 0
+        return sum/len(self.ratings.all())
 
     @property
     def sell_price(self) -> float:

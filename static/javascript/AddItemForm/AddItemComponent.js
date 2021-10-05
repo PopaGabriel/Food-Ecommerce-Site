@@ -1,4 +1,5 @@
-const add_item_url = "/Restaurants/Menu/Food/add_item";
+import urls from "./urls.js";
+const add_item_url = urls["add_item_url"];
 
 class AddItemComponent {
   constructor(options) {

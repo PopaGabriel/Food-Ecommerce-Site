@@ -402,28 +402,4 @@ class ItemComponent {
   }
 }
 
-// new ItemComponent({
-//   name: "Pizza",
-//   price: 100,
-//   ingredients: ["Banana", "Apple", "Orange"],
-//   discount: 11,
-//   realPrice: 90,
-//   is_for_adults: 1,
-//   description: "Description is a hard job",
-//   image: "",
-// });
-
-// new EnlargedItemComponent({
-//   name: "Pizza",
-//   price: 100,
-//   is_available: false,
-//   ingredients: ["Banana", "Apple", "Orange"],
-//   discount: 11,
-//   realPrice: 90,
-//   is_for_adults: 1,
-//   rating_user: 4,
-//   rating: 3.37,
-//   description:
-//     "Description is a hard job Description is a hard job Description is a hard job Description is a hard job",
-//   image: "",
-// });
+export { EnlargedItemComponent, ItemComponent };

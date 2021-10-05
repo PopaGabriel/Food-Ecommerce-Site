@@ -1,6 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models.expressions import Exists
-from django.urls import reverse
 import json
 from Food.models import MenuItem
 from RatingsItem.models import Ratings
@@ -9,7 +6,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from .models import Section
 from Menu.models import Menu
-from django.forms.models import model_to_dict
 
 
 @login_required()
@@ -17,11 +13,12 @@ def SectionAddView(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            Section.objects.create(
-                name=data['title'], menu=Menu.objects.get(id=data['menu'])).save()
-            return JsonResponse('Success', safe=False)
+            section = Section.objects.create(
+                name=data['title'], menu=Menu.objects.get(id=data['menu']))
+            section.save()
+            return JsonResponse(section.id, safe=False)
         except ObjectDoesNotExist:
-            return JsonResponse('Failure', safe=False)
+            return JsonResponse('error', safe=False)
 
 
 @login_required()
@@ -30,10 +27,10 @@ def SectionDeleteView(request):
         try:
             data = json.loads(request.body)
             Section.objects.get(id=data['id']).delete()
-            return JsonResponse('Success', safe=False)
+            return JsonResponse('success', safe=False)
 
         except ObjectDoesNotExist:
-            return JsonResponse('Error', safe=False)
+            return JsonResponse('error', safe=False)
 
 
 @login_required()
@@ -45,18 +42,19 @@ def SectionUpdateView(request):
             section.name = data['name']
             section.save()
 
-            return JsonResponse('Success', safe=False)
+            return JsonResponse('success', safe=False)
 
         except ObjectDoesNotExist:
-            return JsonResponse('Error', safe=False)
+            return JsonResponse('error', safe=False)
 
 
 def SectionGet(request, **kwargs):
-    if request.method == "GET":
-        try:
-            return JsonResponse(Section.objects.get(id=kwargs["pk"]), safe=False)
-        except ObjectDoesNotExist:
-            return JsonResponse("error", safe=False)
+    pass
+    # if request.method == "GET":
+    #     try:
+    #         return JsonResponse(Section.objects.get(id=kwargs["pk"]), safe=False)
+    #     except ObjectDoesNotExist:
+    #         return JsonResponse("error", safe=False)
 
 
 def SectionGetAll(request, **kwargs):

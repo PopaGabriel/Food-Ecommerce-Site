@@ -12,8 +12,9 @@ def AddMenuView(request):
         try:
             data = json.loads(request.body)
             restaurant = Restaurant.objects.get(id=data['restaurant_id'])
-            Menu.objects.create(type=data['title'], restaurant=restaurant).save()
-            return JsonResponse('Success', safe=False)
+            Menu.objects.create(
+                type=data['title'], restaurant=restaurant).save()
+            return JsonResponse('success', safe=False)
 
         except ValueError:
             return JsonResponse('error', safe=False)

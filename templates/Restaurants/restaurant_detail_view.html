@@ -45,74 +45,6 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <!-- <div class="row">
-                            {% for item in section.items.all %}
-                                <div class="skill-card">
-                                    <div class="skill-card__header">
-                                        {% if item.photo %}
-                                            <img alt='Food photo' src="{{ item.photo.url }}" class="skill-card__icon">
-                                        {% else %}
-                                            <img alt='Food photo' class="skill-card__icon"
-                                                 src="{% static 'images/basic_business_icon.png' %}">
-                                        {% endif %}
-                                    </div>
-                                    <section class="skill-card__body">
-                                        <h2 class="skill-card__title">{{ item.name }}</h2>
-                                    {% if item.decription %}
-                                        <span class="skill-card__duration">{{ item.description }}</span>
-                                    {% endif %}
-                                        <span class="skill-card__duration">{{ item.description }}</span>
-                                        <ul class="skill-card__knowledge">
-                                            <li>{% if item.discount > 0 %}
-                                                <p class="card-text"> Price:
-                                                    <strong>
-                                                        <del>{{ item.price }}</del>
-                                                    </strong>
-                                                    <strong>
-                                                        <ins style="color: red">{{ item.sell_price }}</ins>
-                                                    </strong>
-                                                </p>
-                                                <p class="card-text">Discount: <strong
-                                                        style="color: red"> {{ item.discount }}% </strong>
-                                                </p>
-                                            {% else %}
-                                                <p class="card-text">
-                                                    <strong>Price: {{ item.sell_price }}</strong>
-                                                </p>
-                                            {% endif %}</li>
-                                            <li>
-                                                {% if object.owner.username == user.username %}
-                                                    {# TODO #}
-                                                    <button class="btn-test draw-border">Update Item</button>
-                                                    {# TODO #}
-                                                    <button class="btn-test draw-border">Delete Item</button>
-                                                {% endif %}
-                                            </li>
-                                            <li>
-                                                {# ITEM: Select the quantity form #}
-                                                <form id="{{ item.id }} form_quantity" class="form-group">
-                                                    <div class="row">
-                                                        <label>
-                                                            Number of items <input name="quantity_item"
-                                                                                   type="number"
-                                                                                   class="form-control input-sm"
-                                                                                   placeholder="{{ orders|contains_order:item }}"
-                                                                                   value="{{ orders|contains_order:item }}">
-                                                        </label>
-                                                        <button class="btn-test draw-border"
-                                                                name="button-add-cart"
-                                                                data-action="add"
-                                                                data-product={{ item.id }}>
-                                                            Add to cart!
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </section>
-                                </div>
-                            {% endfor %}
-                        </div> -->
                     </section>
                 {% endfor %}
             </section>
@@ -170,15 +102,9 @@
             <h4><strong>There are no reviews yet!</strong></h4>
         </div>
     {% endif %}
-    <script async type="text/javascript" src={% static 'javascript/Confirm_alert.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/basket.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/review.js' %}></script>
-    <script async type="text/javascript" src={% static 'javascript/Form_review.js' %}></script>
-    <script async type="module" src={% static 'javascript/form_section.js' %}></script>
-    <!-- <script async type="text/javascript" src="{% static "javascript/Item/ItemComponent.js" %}"></script> -->
-    <!-- {#    <script async src="{% static 'javascript/AddItemForm/instant-search.js' %}" type="module"></script>#} -->
-    <script async type="text/javascript" src={% static 'javascript/Menus.js' %}></script>
-    <script type="text/javascript" src="{% static 'javascript/Item/EnlargedItemComponent.js' %}"></script>
+    <script async type="module" src={% static 'javascript/Menu/Menus.js' %}></script>
     <script async type="text/javascript">
         let restaurant_id = "{{ object.id }}";
     </script>

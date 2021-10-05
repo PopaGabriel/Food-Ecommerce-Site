@@ -27,6 +27,13 @@
   justify-content: center;
   inline-size: 14em;
 }
+.center {
+  text-align: center;
+  justify-content: center;
+}
+.max_width {
+  width: 100%;
+}
 .ml-3 {
   margin-left: 3px;
 }
@@ -47,4 +54,7 @@
 .star_select {
   color: darkgoldenrod;
   cursor: pointer;
+}
+form_create_review {
+  display: inline-block;
 }

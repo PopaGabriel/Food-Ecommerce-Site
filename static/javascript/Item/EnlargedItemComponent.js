@@ -82,7 +82,6 @@ class EnlargedItemComponent {
     });
 
     [imageAux, this.createTitle()].forEach((elem) => divHead.appendChild(elem));
-    console.log(divHead);
     return divHead;
   }
 
@@ -204,9 +203,12 @@ class EnlargedItemComponent {
   }
 
   downgrade() {
-    // const position = this.html.parentElement.children.indexOf(this.html);
-    // console.log(position);
-    return new ItemComponent(this.options);
+    this.elements.main.parentElement.insertBefore(
+      new ItemComponent(this.options).html,
+      this.elements.main
+    );
+    this.elements.main.parentElement.removeChild(this.elements.main);
+    return;
   }
 
   get html() {
@@ -219,7 +221,7 @@ class ItemComponent {
     this.options = options;
     this.elements = {
       main: document.createElement("div"),
-      head: this.createHead(""),
+      head: this.createHead(),
       body: this.createBody(),
       command: this.createCommand(),
     };
@@ -228,21 +230,14 @@ class ItemComponent {
       this.elements.main.appendChild(elem)
     );
 
-    document.body.appendChild(this.elements.main);
-
     this.addEventListeners();
   }
 
   createBody() {
     const body = document.createElement("div");
     ["skill-card__body"].forEach((elem) => body.classList.add(elem));
-    [
-      this.createTitle(),
-      this.createCommand(),
-      // this.createDescription(),
-      // this.createIngredients(),
-      // this.createPrice(),
-    ].forEach((elem) => body.appendChild(elem));
+    body.appendChild(this.createTitle());
+    body.appendChild(this.createCommand());
 
     return body;
   }
@@ -394,7 +389,11 @@ class ItemComponent {
     });
   }
   upgrade() {
-    new EnlargedItemComponent(this.options);
+    this.elements.main.parentElement.insertBefore(
+      new EnlargedItemComponent(this.options).html,
+      this.elements.main
+    );
+    this.elements.main.parentElement.removeChild(this.elements.main);
     return;
   }
   get html() {

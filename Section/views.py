@@ -74,9 +74,12 @@ def SectionGetAll(request, **kwargs):
             sections = Section.objects.filter(
                 menu_id=kwargs["menu"]).values()
             for section in sections:
-                section["items"] = list(MenuItem.objects.filter(
-                    section_id=section["id"]).values())
-                getRatings(section["items"])
+                query_items = MenuItem.objects.filter(
+                    section_id=section["id"])
+                section["items"] = list(query_items.values())
+                for i, item in enumerate(query_items):
+                    section["items"][i]["ingredients"] = list(
+                        item.ingredients.all())
             return JsonResponse(list(sections), safe=False)
         except ObjectDoesNotExist:
             return JsonResponse("error", safe=False)

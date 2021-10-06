@@ -2,7 +2,6 @@
 {% load custom_orderfood_tags %}
 {% load static %}
 {% block content %}
-    <input type="hidden" name="restaurant_id_input" value='{{ object.id }}'>
     {% if object.owner.username == user.username %}
         {# TODO #}
         <div id="Actions_owner_div">
@@ -11,55 +10,15 @@
         </div>
         <div id="Action_owner_form"></div>
     {% endif %}
-    {% if  object.menu %}
-        {% for menu in object.menu.all %}
-            <section id='section_inside_menu{{ menu.id }}' class="p-4 bg-white shadow">
-                <div class="row">
-                    <h4> {{ menu.type }} </h4>
-                    {% if object.owner.username == user.username %}
-                        <button class="btn-test draw-border" name="button_show_form_section" value="{{ menu.id }}">
-                            Add Section
-                        </button>
-                        <button class="btn-test draw-border" name="delete_menu_button" value="{{ menu.id }}">Delete
-                            Menu
-                        </button>
-                    {% endif %}
-                </div>
-                {% for section in menu.sections.all %}
-                    <section class="p-4 shadow bg-white rounded container">
-                        <div class="row">
-                            <div class="p-2">
-                                <h5>{{ section.name }}</h5>
-                            </div>
-                            <div class="p-2">
-                                {% if object.owner.username == user.username %}
-                                    <button name="add_item_button" class="btn-test draw-border"
-                                            value="{{ section.id }}">Add Item
-                                    </button>
-                                    <button class="btn-test draw-border" name="delete_section_button"
-                                            value="{{ section.id }}"> Delete Section
-                                    </button>
-                                    <button class="btn-test draw-border" name="button_update_section"
-                                            value="{{ section.id }}"> Update section
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </section>
-                {% endfor %}
-            </section>
-        {% endfor %}
-    {% else %}
-        <p>There are no menus at the moment</p>
-    {% endif %}
+    <div id="Menu"></div>
     <h3><strong>Reviews</strong></h3>
-    {# REVIEW ADD #}
+    <!-- {# REVIEW ADD #}
     {% if user.is_authenticated %}
         <div id="div_review_add">
             <button name='add_review_first_button' class="btn-test draw-border">Add Review</button>
         </div>
-    {% endif %}
-    {# Here are all of the Reviews #}
+    {% endif %} -->
+    <!-- {# Here are all of the Reviews #}
     {% if object.reviews.all %}
         <div class="row" id="reviews_div">
             {% for review in object.reviews.all %}
@@ -101,10 +60,11 @@
         <div>
             <h4><strong>There are no reviews yet!</strong></h4>
         </div>
-    {% endif %}
+    {% endif %} -->
     <script async type="text/javascript" src={% static 'javascript/basket.js' %}></script>
     <script async type="text/javascript" src={% static 'javascript/review.js' %}></script>
-    <script async type="module" src={% static 'javascript/Menu/Menus.js' %}></script>
+    <!-- <script async type="module" src={% static 'javascript/Menu/Menus.js' %}></script> -->
+    <script async type="module" src={% static 'javascript/Restaurant/Restaurant.js' %}></script>
     <script async type="text/javascript">
         let restaurant_id = "{{ object.id }}";
     </script>

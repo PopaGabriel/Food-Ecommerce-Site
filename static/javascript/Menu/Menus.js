@@ -150,4 +150,5 @@ class Menu {
     return this.elements.main;
   }
 }
-new Menu({ name: "Test", id: 3 }).html;
+// new Menu({ name: "Test", id: 3 }).html;
+export default Menu;

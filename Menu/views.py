@@ -33,3 +33,12 @@ def DeleteMenuView(request):
             return JsonResponse('error', safe=False)
         except ObjectDoesNotExist:
             return JsonResponse('error', safe=False)
+
+
+def GetMenuView(request, **kwargs):
+    if request.method == "GET":
+        try:
+            menus = Menu.objects.filter(restaurant_id=kwargs["restaurant_id"])
+            return JsonResponse(list(menus.values()), safe=False)
+        except ValueError as ve:
+            return JsonResponse(("error", ve.args), safe=False)

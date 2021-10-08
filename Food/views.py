@@ -6,31 +6,28 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.generic import (UpdateView)
 
-from Proiect_atelier_google.settings import STATIC_URL, MEDIA_URL
+from Proiect_atelier_google.settings import MEDIA_URL
 from .models import MenuItem
-from Section.models import Section
+from .forms import AddMenuItemForm
 
 
 @login_required()
 def AddMenuItemView(request):
     if request.method == "POST":
         try:
-            data = json.loads(request.body)
-            if len(data['name']) < 2:
-                raise Exception("Name exception")
-            menu_item = MenuItem.objects.create(price=int(data["price"]),
-                                                discount=int(data["discount"]),
-                                                name=data["name"],
-                                                section=Section.objects.get(
-                                                    id=data["section_id"]),
-                                                is_for_adults=0 if not data["adult"] else 1)
-            if data["image"] != "" and any(data["image"].endswith(elem) for elem in [".jpg", ".png"]):
-                menu_item.photo = data["image"]
+            form = AddMenuItemForm(request.POST, request.FILES)
 
-            menu_item.save()
-            print(menu_item)
-
-            return JsonResponse("success", safe=False)
+            if form.is_valid():
+                item = form.save(commit=False)
+                item.is_available = True
+                form.save()
+                menu = MenuItem.objects.filter(id=item.id)
+                ingredients = list(menu[0].ingredients.all())
+                menu = list(menu.values())
+                menu[0]["ingredients"] = ingredients
+            else:
+                JsonResponse(form.errors, safe=False)
+            return JsonResponse(menu[0], safe=False)
         except ObjectDoesNotExist as obj:
             return JsonResponse(obj.args, safe=False)
         except KeyError as key:
@@ -41,11 +38,9 @@ def AddMenuItemView(request):
             return JsonResponse(exception.args, safe=False)
 
 
-@login_required()
+@ login_required()
 def DeleteMenuItemView(request):
     if request.method == "POST":
-        data = json.loads(request.boy)
-        print(data)
         return JsonResponse("success", safe=False)
 
 

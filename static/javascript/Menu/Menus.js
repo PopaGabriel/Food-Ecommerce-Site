@@ -1,4 +1,4 @@
-import Button from "../BasicComponents/Button.js";
+import Component from "../BasicComponents/Component.js";
 import Section from "../Section/Section.js";
 import ConfirmAlert from "../Confirms/ConfirmAlert.js";
 import FormSection from "../Forms/FormSection.js";
@@ -37,7 +37,7 @@ class Menu {
     const command_div = document.createElement("div");
     command_div.classList.add("center");
 
-    const button_add_section = new Button()
+    const button_add_section = new Component("button")
       .addClasses(["btn-test", "draw-border"])
       .addListeners([
         () => {
@@ -75,7 +75,7 @@ class Menu {
                         );
                       this.formSection = null;
                     })
-                    .err((this.formSection = null));
+                    .catch((this.formSection = null));
                 },
               ])
               .addOn_exit();
@@ -86,7 +86,7 @@ class Menu {
       .addTextContent("Add Section").html;
     command_div.appendChild(button_add_section);
 
-    const button_delete_Menu = new Button()
+    const button_delete_Menu = new Component("button")
       .addClasses(["btn-test", "draw-border"])
       .addListeners([
         () => {
@@ -120,7 +120,7 @@ class Menu {
       .addTextContent("Delete Menu").html;
     command_div.appendChild(button_delete_Menu);
 
-    const button_update_Menu = new Button()
+    const button_update_Menu = new Component("button")
       .addClasses(["btn-test", "draw-border"])
       .addListeners([() => {}])
       .addTextContent("Update Menu").html;

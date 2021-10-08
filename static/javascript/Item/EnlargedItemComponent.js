@@ -1,69 +1,76 @@
+import Component from "../BasicComponents/Component.js";
+
 const add_item_url = "/Restaurants/Menu/Food/get_basic_item";
+const add_rating = "/ratings/add_review/item=<int:id>&&mark=<int:mark>";
 
 class EnlargedItemComponent {
   constructor(options) {
     this.options = options;
     this.elements = {
-      main: document.createElement("div"),
+      main: new Component("div"),
       head: this.createHead(),
       info: this.createInfo(),
       command: this.createCommand(),
+      commandOwner: this.createCommadOwner(),
     };
-    ["row", "bigSkillCard"].forEach((cls) =>
-      this.elements.main.classList.add(cls)
-    );
-    [this.elements.head, this.elements.info].forEach((elem) =>
-      this.elements.main.appendChild(elem)
-    );
-    document.body.appendChild(this.html);
+    this.elements.main
+      .addClasses(["row", "bigSkillCard"])
+      .addChildren([this.elements.head, this.elements.info]);
   }
 
   createInfo() {
-    const info = document.createElement("div");
-    ["coll", "ml-3"].forEach((elem) => info.classList.add(elem));
-
-    [
-      this.createIngredients(),
-      this.createPrice(),
-      this.createCommand(),
-    ].forEach((elem) => info.appendChild(elem));
-    return info;
+    const info = new Component("div")
+      .addClasses(["coll", "ml-3"])
+      .addChildren([
+        this.createIngredients(),
+        this.createPrice(),
+        this.createCommand(),
+        this.createCommadOwner(),
+      ]);
+    return info.html;
   }
+  createCommadOwner() {
+    const commandDiv = new Component("div").addClasses(["row"]);
 
+    const deleteButton = new Component("button")
+      .addClasses(["btn-test", "draw-border"])
+      .addTextContent("Delete")
+      .addListeners([() => {}]).html;
+
+    const updateButton = new Component("button")
+      .addClasses(["btn-test", "draw-border"])
+      .addTextContent("Update")
+      .addListeners([() => {}]).html;
+    commandDiv.addChildren([updateButton, deleteButton]);
+    return commandDiv.html;
+  }
   createCommand() {
-    const commandDiv = document.createElement("div");
-    ["row", "special"].forEach((cls) => commandDiv.classList.add(cls));
+    const commandDiv = new Component("div").addClasses(["row", "special"]);
+    const formOrder = new Component("div");
+    const label = new Component("p");
 
-    const formOrder = document.createElement("div");
     if (this.options.is_available) {
-      const label = document.createElement("p");
-      label.textContent = "How many do you want?";
-
-      const input_nr = document.createElement("input");
-      input_nr.type = "number";
-      input_nr.placeholder = "0";
-      input_nr.min = 0;
-      ["input_add_item"].forEach((cls) => input_nr.classList.add(cls));
-
-      [input_nr].forEach((elem) => label.appendChild(elem));
-      [label].forEach((elem) => formOrder.appendChild(elem));
+      const input_nr = new Component("input")
+        .addClasses(["input_add_item"])
+        .addMin(0)
+        .addPlaceholder("0")
+        .addType("number").html;
+      label.addTextContent("How many do you want?").addChildren([input_nr]);
     } else {
-      const label = document.createElement("p");
-      label.textContent = "Not available";
-      ["content_centered"].forEach((cls) => label.classList.add(cls));
-      ["content_centered"].forEach((cls) => commandDiv.classList.add(cls));
-
-      [label].forEach((elem) => formOrder.appendChild(elem));
+      label.addTextContent("Not available").addClasses(["content_centered"]);
     }
+    formOrder.addChildren([label.html]);
+    commandDiv.addChildren([formOrder.html]);
 
-    [formOrder].forEach((elem) => commandDiv.appendChild(elem));
-
-    return commandDiv;
+    return commandDiv.html;
   }
 
   createHead() {
     const divHead = document.createElement("div");
     ["coll"].forEach((cls) => divHead.classList.add(cls));
+
+    const header = document.createElement("div");
+    header.classList.add("skill-card__header-enlarged");
 
     const imageAux = document.createElement("img");
     if (this.options.image === "")
@@ -76,27 +83,46 @@ class EnlargedItemComponent {
         .then((response) => response.json())
         .then((data) => (imageAux.src = data));
     else imageAux.src = this.options.image;
+    imageAux.classList.add("skill-card__icon-enlarged");
 
     imageAux.addEventListener("click", () => {
       this.downgrade();
     });
+    header.append(imageAux);
 
-    [imageAux, this.createTitle()].forEach((elem) => divHead.appendChild(elem));
+    if (this.options.discount > 0) {
+      const discount = document.createElement("span");
+      ["product-label-discount"].forEach((elem) =>
+        discount.classList.add(elem)
+      );
+      discount.textContent = "-" + this.options.discount + "%";
+      header.appendChild(discount);
+    }
+
+    if (this.options.is_for_adults === 1) {
+      const adult = document.createElement("span");
+      ["product-label-age"].forEach((elem) => adult.classList.add(elem));
+      adult.textContent = "+18";
+      header.appendChild(adult);
+    }
+
+    [header, this.createTitle()].forEach((elem) => divHead.appendChild(elem));
     return divHead;
   }
 
   createTitle() {
-    const title_div = document.createElement("div");
-    ["content_centered"].forEach((elem) => title_div.classList.add(elem));
+    const title_div = new Component("div").addClasses(["content_centered"]);
 
-    const title = document.createElement("h2");
-    ["skill-card__title"].forEach((elem) => title.classList.add(elem));
-    title.textContent = this.options.name;
+    const title = new Component("h2")
+      .addClasses(["skill-card__title"])
+      .addTextContent(this.options.name);
 
-    [title, this.createStarSystem(), this.createDescription()].forEach((elem) =>
-      title_div.appendChild(elem)
-    );
-    return title_div;
+    title_div.addChildren([
+      title.html,
+      this.createStarSystem(),
+      this.createDescription(),
+    ]);
+    return title_div.html;
   }
 
   createPrice() {
@@ -109,9 +135,10 @@ class EnlargedItemComponent {
     if (this.options.discount > 0) {
       const realPrice = document.createElement("p");
       ["ml-3"].forEach((cls) => realPrice.classList.add(cls));
-      realPrice.textContent = "Actual Price: " + this.options.realPrice;
-
-      [actualPrice, realPrice].forEach((elem) => priceDiv.appendChild(elem));
+      realPrice.textContent =
+        "Actual Price: " +
+        this.options.price * (1 - this.options.discount / 100);
+      [(actualPrice, realPrice)].forEach((elem) => priceDiv.appendChild(elem));
     } else [actualPrice].forEach((elem) => priceDiv.appendChild(elem));
     return priceDiv;
   }
@@ -137,60 +164,115 @@ class EnlargedItemComponent {
   }
 
   createStarSystem() {
-    const body = document.createElement("div");
-    ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
+    const body = new Component("div").addClasses(["row", "content_centered"]);
 
-    const generalRating = document.createElement("p");
-    generalRating.textContent = "(" + this.options.rating + ")";
+    const generalRating = new Component("p").addTextContent(
+      "(" + this.options.rating + ")"
+    );
 
     const list_stars = [];
-    for (let i = 0; i < 5; i++) list_stars.push(document.createElement("span"));
+    for (let i = 0; i < 5; i++) list_stars.push(new Component("span"));
 
     for (let i = 0; i < list_stars.length; i++) {
       const elem = list_stars[i];
       if (i < this.options.rating_user)
-        elem.classList.add("star_selected", "material-icons");
-      else elem.classList.add("star", "material-icons");
-      elem.textContent = "star_rate";
+        elem.addClasses(["star_selected", "material-icons"]);
+      else elem.addClasses(["star", "material-icons"]);
+      elem
+        .addTextContent("star_rate")
+        .addEventListener([
+          "mouseenter",
+          () => {
+            for (let j = list_stars.indexOf(elem); j >= 0; j--)
+              list_stars[j].toggle([["star_select", true]]);
+          },
+        ])
+        .addEventListener([
+          "mouseout",
+          () => {
+            for (let j = list_stars.indexOf(elem); j >= 0; j--)
+              list_stars[j].toggle([["star_select", false]]);
+          },
+        ])
+        .addEventListener([
+          "click",
+          () => {
+            //Unchoose
+            if (
+              (elem.containsClass("star_selected") &&
+                list_stars[list_stars.indexOf(elem) + 1] &&
+                !list_stars[list_stars.indexOf(elem) + 1].containsClass(
+                  "star_selected"
+                )) ||
+              (elem.containsClass("star_selected") &&
+                list_stars.indexOf(elem) == list_stars.length - 1)
+            ) {
+              for (let j = 0; j < list_stars.length; j++)
+                list_stars[j].toggle([
+                  ["star_selected", false],
+                  ["star", true],
+                ]);
+              this.options.rating_user = 0;
 
-      elem.addEventListener("mouseenter", () => {
-        for (let j = list_stars.indexOf(elem); j >= 0; j--)
-          list_stars[j].classList.toggle("star_select", true);
-      });
-      elem.addEventListener("mouseout", () => {
-        for (let j = list_stars.indexOf(elem); j >= 0; j--)
-          list_stars[j].classList.toggle("star_select", false);
-      });
-      elem.addEventListener("click", () => {
-        if (
-          (elem.classList.contains("star_selected") &&
-            list_stars[list_stars.indexOf(elem) + 1] &&
-            !list_stars[list_stars.indexOf(elem) + 1].classList.contains(
-              "star_selected"
-            )) ||
-          (elem.classList.contains("star_selected") &&
-            list_stars.indexOf(elem) == list_stars.length - 1)
-        ) {
-          for (let j = 0; j < list_stars.length; j++) {
-            list_stars[j].classList.toggle("star_selected", false);
-            list_stars[j].classList.toggle("star", true);
-          }
-          return;
-        }
-        for (let j = list_stars.indexOf(elem); j >= 0; j--) {
-          list_stars[j].classList.toggle("star_select", false);
-          list_stars[j].classList.toggle("star_selected", true);
-        }
+              fetch(
+                add_rating
+                  .replace("<int:id>", "" + this.options.id)
+                  .replace("<int:mark>", "" + 0),
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application.json",
+                    "X-CSRFToken": csrftoken,
+                  },
+                }
+              )
+                .then((response) => response.json())
+                .then((data) => {
+                  generalRating.addTextContent("(" + data + ")");
+                  this.options.rating = data;
+                });
+              return;
+            }
+            for (let j = list_stars.indexOf(elem); j >= 0; j--)
+              list_stars[j].toggle([
+                ["star_select", false],
+                ["star_selected", true],
+              ]);
 
-        for (let j = list_stars.indexOf(elem) + 1; j < list_stars.length; j++) {
-          list_stars[j].classList.toggle("star_selected", false);
-          list_stars[j].classList.toggle("star", true);
-        }
-      });
-      body.appendChild(elem);
+            for (
+              let j = list_stars.indexOf(elem) + 1;
+              j < list_stars.length;
+              j++
+            )
+              list_stars[j].toggle([
+                ["star_selected", false],
+                ["star", true],
+              ]);
+
+            this.options.rating_user = list_stars.indexOf(elem) + 1;
+            fetch(
+              add_rating
+                .replace("<int:id>", "" + this.options.id)
+                .replace("<int:mark>", "" + (list_stars.indexOf(elem) + 1)),
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application.json",
+                  "X-CSRFToken": csrftoken,
+                },
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                generalRating.addTextContent("(" + data + ")");
+                this.options.rating = data;
+              });
+          },
+        ]);
+      body.addChildren([elem.html]);
     }
-    body.appendChild(generalRating);
-    return body;
+    body.addChildren([generalRating.html]);
+    return body.html;
   }
 
   createDescription() {
@@ -203,16 +285,16 @@ class EnlargedItemComponent {
   }
 
   downgrade() {
-    this.elements.main.parentElement.insertBefore(
+    this.html.parentElement.insertBefore(
       new ItemComponent(this.options).html,
-      this.elements.main
+      this.html
     );
-    this.elements.main.parentElement.removeChild(this.elements.main);
+    this.html.parentElement.removeChild(this.html);
     return;
   }
 
   get html() {
-    return this.elements.main;
+    return this.elements.main.html;
   }
 }
 
@@ -223,7 +305,6 @@ class ItemComponent {
       main: document.createElement("div"),
       head: this.createHead(),
       body: this.createBody(),
-      command: this.createCommand(),
     };
     ["skill-card"].forEach((elem) => this.elements.main.classList.add(elem));
     [this.elements.head, this.elements.body].forEach((elem) =>
@@ -237,7 +318,6 @@ class ItemComponent {
     const body = document.createElement("div");
     ["skill-card__body"].forEach((elem) => body.classList.add(elem));
     body.appendChild(this.createTitle());
-    body.appendChild(this.createCommand());
 
     return body;
   }
@@ -260,7 +340,8 @@ class ItemComponent {
     if (this.options.discount > 0) {
       const real_price = document.createElement("p");
       ["info_card_sale"].forEach((elem) => real_price.classList.add(elem));
-      real_price.textContent = this.options.realPrice + " lei";
+      real_price.textContent =
+        this.options.price * (1 - this.options.discount / 100) + " lei";
       [real_price].forEach((elem) => title_div.appendChild(elem));
 
       price.style.textDecoration = "line-through";
@@ -268,24 +349,6 @@ class ItemComponent {
     }
 
     return title_div;
-  }
-
-  createCommand() {
-    const body = document.createElement("div");
-    ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
-
-    const deleteButton = document.createElement("button");
-    ["btn-test", "draw-border"].forEach((elem) =>
-      deleteButton.classList.add(elem)
-    );
-    deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", () => {
-      console.log("yes");
-    });
-
-    [deleteButton].forEach((elem) => body.appendChild(elem));
-
-    return body;
   }
 
   createHead() {
@@ -328,60 +391,115 @@ class ItemComponent {
   }
 
   createStarSystem() {
-    const body = document.createElement("div");
-    ["row", "content_centered"].forEach((elem) => body.classList.add(elem));
+    const body = new Component("div").addClasses(["row", "content_centered"]);
 
-    const generalRating = document.createElement("p");
-    generalRating.textContent = "(" + this.options.rating + ")";
+    const generalRating = new Component("p").addTextContent(
+      "(" + this.options.rating + ")"
+    );
 
     const list_stars = [];
-    for (let i = 0; i < 5; i++) list_stars.push(document.createElement("span"));
+    for (let i = 0; i < 5; i++) list_stars.push(new Component("span"));
 
     for (let i = 0; i < list_stars.length; i++) {
       const elem = list_stars[i];
       if (i < this.options.rating_user)
-        elem.classList.add("star_selected", "material-icons");
-      else elem.classList.add("star", "material-icons");
-      elem.textContent = "star_rate";
+        elem.addClasses(["star_selected", "material-icons"]);
+      else elem.addClasses(["star", "material-icons"]);
+      elem
+        .addTextContent("star_rate")
+        .addEventListener([
+          "mouseenter",
+          () => {
+            for (let j = list_stars.indexOf(elem); j >= 0; j--)
+              list_stars[j].toggle([["star_select", true]]);
+          },
+        ])
+        .addEventListener([
+          "mouseout",
+          () => {
+            for (let j = list_stars.indexOf(elem); j >= 0; j--)
+              list_stars[j].toggle([["star_select", false]]);
+          },
+        ])
+        .addEventListener([
+          "click",
+          () => {
+            //Unchoose
+            if (
+              (elem.containsClass("star_selected") &&
+                list_stars[list_stars.indexOf(elem) + 1] &&
+                !list_stars[list_stars.indexOf(elem) + 1].containsClass(
+                  "star_selected"
+                )) ||
+              (elem.containsClass("star_selected") &&
+                list_stars.indexOf(elem) == list_stars.length - 1)
+            ) {
+              for (let j = 0; j < list_stars.length; j++)
+                list_stars[j].toggle([
+                  ["star_selected", false],
+                  ["star", true],
+                ]);
+              this.options.rating_user = 0;
 
-      elem.addEventListener("mouseenter", () => {
-        for (let j = list_stars.indexOf(elem); j >= 0; j--)
-          list_stars[j].classList.toggle("star_select", true);
-      });
-      elem.addEventListener("mouseout", () => {
-        for (let j = list_stars.indexOf(elem); j >= 0; j--)
-          list_stars[j].classList.toggle("star_select", false);
-      });
-      elem.addEventListener("click", () => {
-        if (
-          (elem.classList.contains("star_selected") &&
-            list_stars[list_stars.indexOf(elem) + 1] &&
-            !list_stars[list_stars.indexOf(elem) + 1].classList.contains(
-              "star_selected"
-            )) ||
-          (elem.classList.contains("star_selected") &&
-            list_stars.indexOf(elem) == list_stars.length - 1)
-        ) {
-          for (let j = 0; j < list_stars.length; j++) {
-            list_stars[j].classList.toggle("star_selected", false);
-            list_stars[j].classList.toggle("star", true);
-          }
-          return;
-        }
-        for (let j = list_stars.indexOf(elem); j >= 0; j--) {
-          list_stars[j].classList.toggle("star_select", false);
-          list_stars[j].classList.toggle("star_selected", true);
-        }
+              fetch(
+                add_rating
+                  .replace("<int:id>", "" + this.options.id)
+                  .replace("<int:mark>", "" + 0),
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application.json",
+                    "X-CSRFToken": csrftoken,
+                  },
+                }
+              )
+                .then((response) => response.json())
+                .then((data) => {
+                  generalRating.addTextContent("(" + data + ")");
+                  this.options.rating = data;
+                });
+              return;
+            }
+            for (let j = list_stars.indexOf(elem); j >= 0; j--)
+              list_stars[j].toggle([
+                ["star_select", false],
+                ["star_selected", true],
+              ]);
 
-        for (let j = list_stars.indexOf(elem) + 1; j < list_stars.length; j++) {
-          list_stars[j].classList.toggle("star_selected", false);
-          list_stars[j].classList.toggle("star", true);
-        }
-      });
-      body.appendChild(elem);
+            for (
+              let j = list_stars.indexOf(elem) + 1;
+              j < list_stars.length;
+              j++
+            )
+              list_stars[j].toggle([
+                ["star_selected", false],
+                ["star", true],
+              ]);
+
+            this.options.rating_user = list_stars.indexOf(elem) + 1;
+            fetch(
+              add_rating
+                .replace("<int:id>", "" + this.options.id)
+                .replace("<int:mark>", "" + (list_stars.indexOf(elem) + 1)),
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application.json",
+                  "X-CSRFToken": csrftoken,
+                },
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                generalRating.addTextContent("(" + data + ")");
+                this.options.rating = data;
+              });
+          },
+        ]);
+      body.addChildren([elem.html]);
     }
-    body.appendChild(generalRating);
-    return body;
+    body.addChildren([generalRating.html]);
+    return body.html;
   }
   addEventListeners() {
     this.elements.head.firstChild.addEventListener("click", () => {

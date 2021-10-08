@@ -1,5 +1,5 @@
 import createAddItemForm from "../AddItemForm/instant-search.js";
-import Button from "../BasicComponents/Button.js";
+import Component from "../BasicComponents/Component.js";
 import ConfirmAlert from "../Confirms/ConfirmAlert.js";
 import { ItemComponent } from "../Item/EnlargedItemComponent.js";
 import { get_items_base, url_section_delete } from "./urls.js";
@@ -13,6 +13,7 @@ class Section {
       head: this.createHead(),
       body: this.populateSection(),
     };
+    this.form_item = null;
     this.elements.main.appendChild(this.elements.head);
     this.elements.main.appendChild(this.elements.body);
   }
@@ -28,19 +29,26 @@ class Section {
     const command_div = document.createElement("div");
     command_div.classList.add("center");
 
-    const button_add_item = new Button()
+    const button_add_item = new Component("button")
       .addClasses(["btn-test", "draw-border"])
       .addListeners([
         () => {
-          head.append(
-            createAddItemForm(search_ingredient, this.options.id).html
-          );
+          if (!this.form_item) {
+            this.form_item = createAddItemForm(
+              search_ingredient,
+              this.options.id,
+              this
+            );
+            head.append(this.form_item.html);
+          } else if (!this.form_item.html.classList.contains("hide"))
+            this.form_item.html.classList.toggle("hide", true);
+          else this.form_item.html.classList.toggle("hide", false);
         },
       ])
       .addTextContent("Add Item").html;
     command_div.appendChild(button_add_item);
 
-    const button_delete_section = new Button()
+    const button_delete_section = new Component("buton")
       .addTextContent("Delete Section")
       .addClasses(["btn-test", "draw-border"])
       .addListeners([
@@ -76,7 +84,7 @@ class Section {
       ]).html;
     command_div.appendChild(button_delete_section);
 
-    const button_update_section = new Button()
+    const button_update_section = new Component("button")
       .addListeners([])
       .addTextContent("Update Section")
       .addClasses(["btn-test", "draw-border"]).html;
@@ -85,14 +93,22 @@ class Section {
 
     return head;
   }
+  addItem(data) {
+    data["rating_user"] = 0;
+    data["rating"] = 0;
+    data["image"] = "/media/" + data["image"];
+    this.form_item = null;
+    this.elements.body.append(new ItemComponent(data).html);
+  }
   populateSection() {
-    const body = document.createElement("div");
-    body.classList.add("center", "row");
+    const body = new Component("div").addClasses(["center", "row"]);
+    let arrayCards = [];
     for (let i = 0; i < this.options.items.length; i++) {
       this.options.items[i].image = "/media/" + this.options.items[i].image;
-      body.appendChild(new ItemComponent(this.options.items[i]).html);
+      arrayCards.push(new ItemComponent(this.options.items[i]).html);
     }
-    return body;
+    body.addChildren(arrayCards);
+    return body.html;
   }
   remove() {
     this.elements.main.parentElement.removeChild(this.elements.main);

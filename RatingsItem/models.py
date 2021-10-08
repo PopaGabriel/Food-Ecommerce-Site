@@ -17,4 +17,4 @@ class Ratings(models.Model):
                                default=3)
 
     def __str__(self) -> str:
-        return "" + self.mark + self.author
+        return "" + str(self.food) + str(self.mark)

@@ -40,4 +40,4 @@ class Restaurant {
 }
 // export default Restaurant;
 
-document.body.append(new Restaurant({ restaurant_id: restaurant_id }).html);
+document.body.append(new Restaurant({ restaurant_id: 1 }).html);

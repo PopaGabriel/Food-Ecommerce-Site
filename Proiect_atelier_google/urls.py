@@ -15,4 +15,5 @@ urlpatterns = [
     path('likes/', include('Likes&Dislikes.urls')),
     path('section/', include('Section.urls')),
     path('ingredients/', include('Ingredients.urls')),
+    path('ratings/', include('RatingsItem.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

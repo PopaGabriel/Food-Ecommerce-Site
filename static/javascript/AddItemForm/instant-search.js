@@ -3,7 +3,7 @@ import ContainerAddedIngredients from "./AddedItemsContainer.js";
 import SearchAddedIngredients from "./SearchAddedIngredients.js";
 import AddItemComponent from "./AddItemComponent.js";
 
-function createAddItemForm(url_ingredients, section_id) {
+function createAddItemForm(url_ingredients, section_id, parent) {
   let searchIngredientsBar = document.createElement("div");
   ["search", "search--loading", "search__ingredients-container"].forEach(
     (elem) => searchIngredientsBar.classList.add(elem)
@@ -23,6 +23,7 @@ function createAddItemForm(url_ingredients, section_id) {
   return new AddItemComponent({
     ingredients: searchAddComponent,
     section_id: section_id,
+    parent: parent,
   });
 }
 

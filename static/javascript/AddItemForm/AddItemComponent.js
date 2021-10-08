@@ -45,7 +45,8 @@ class AddItemComponent {
   }
 
   createBase() {
-    let base = document.createElement("div");
+    let base = document.createElement("form");
+    base.enctype = "multipart/form-data";
 
     let name = this.createInput("name", "text", "Add name", "Title");
     let price = this.createInput("price", "number", "0", "Price");
@@ -98,21 +99,22 @@ class AddItemComponent {
         ingredients.push(elem.textContent)
       );
 
-      const data = this.inputs;
-      data["ingredients"] = ingredients;
-      data["section_id"] = this.options.section_id;
-      console.log(JSON.stringify(data));
+      let form = new FormData(this.elements.base);
+      form.append("ingredients", ingredients);
+      form.append("section", this.options.section_id);
+      if (!form.get("adult")) form.append("is_for_adults", 0);
+      else form.append("is_for_adults", 1);
+
       fetch(add_item_url, {
         method: "POST",
         headers: {
-          "Content-Type": "application.json",
           "X-CSRFToken": csrftoken,
         },
-        body: JSON.stringify(data),
+        body: form,
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          this.options.parent.addItem(data);
           this.elements.main.parentElement.removeChild(this.elements.main);
         });
     });
@@ -134,19 +136,6 @@ class AddItemComponent {
     this.addListenersCommand(button_send, button_cancel);
 
     return base;
-  }
-
-  get inputs() {
-    const list_out = {};
-    Array.from(this.elements.base.children).forEach((elem) => {
-      if (elem.firstChild.childNodes[1].type === "checkbox")
-        list_out[elem.firstChild.childNodes[1].name] =
-          elem.firstChild.childNodes[1].checked;
-      else
-        list_out[elem.firstChild.childNodes[1].name] =
-          elem.firstChild.childNodes[1].value;
-    });
-    return list_out;
   }
 
   get html() {

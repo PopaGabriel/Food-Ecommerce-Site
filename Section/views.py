@@ -58,16 +58,6 @@ def SectionGet(request, **kwargs):
 
 
 def SectionGetAll(request, **kwargs):
-    def getRatings(section):
-        for item in section:
-            if request.user.is_authenticated:
-                rating = Ratings.objects.filter(
-                    food_id=int(item["id"]), author=request.user)
-                item["rating_user"] = None if not rating.exists(
-                ) else rating.first.mark
-            else:
-                item["rating_user"] = None
-            item["rating"] = MenuItem.objects.get(id=item["id"]).getRatings
 
     if request.method == "GET":
         try:
@@ -80,6 +70,9 @@ def SectionGetAll(request, **kwargs):
                 for i, item in enumerate(query_items):
                     section["items"][i]["ingredients"] = list(
                         item.ingredients.all())
+                    section["items"][i]["rating_user"] = item.getRatingUser(
+                        request.user)
+                    section["items"][i]["rating"] = item.getRatings
             return JsonResponse(list(sections), safe=False)
         except ObjectDoesNotExist:
             return JsonResponse("error", safe=False)

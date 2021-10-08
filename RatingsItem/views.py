@@ -1,19 +1,19 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
-import json
+from Food.models import MenuItem
+
+from RatingsItem.models import Ratings
 
 
 @login_required()
 def AddReviewItem(request, **kwargs):
     if request.method == "POST":
-        print(kwargs["mark"], kwargs["id"])
-        return JsonResponse("yes", safe=False)
-
-
-@login_required()
-def RemoveReviewItem(request, **kwargs):
-    if request.method == "POST":
-        print(kwargs["id"])
-        return JsonResponse("yes", safe=False)
+        rating, created = Ratings.objects.get_or_create(
+            author=request.user, food_id=kwargs["id"])
+        rating.mark = kwargs["mark"]
+        if kwargs["mark"] == 0:
+            if not created:
+                rating.delete()
+        else:
+            rating.save()
+        return JsonResponse(MenuItem.objects.get(id=kwargs["id"]).getRatings, safe=False)

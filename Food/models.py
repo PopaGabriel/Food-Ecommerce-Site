@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from RatingsItem.models import Ratings
+
 
 class MenuItem(models.Model):
     class AdultOriented(models.IntegerChoices):
@@ -38,6 +40,11 @@ class MenuItem(models.Model):
     def sell_price(self) -> float:
         """Returns the selling price of a product"""
         return (1 - self.discount / 100) * self.price
+
+    def getRatingUser(self, user) -> int:
+        query = Ratings.objects.filter(food_id=self.pk, author=user)
+        mark = query[0].mark if query.exists() else 0
+        return mark
 
     def __str__(self):
         return f'{self.name} Price: {self.sell_price}'

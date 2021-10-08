@@ -1,10 +1,10 @@
 .skill-card {
-    /*flex-shrink: 3;*/
-    margin: 10px;
-    padding: 20px;
-    width: 18em;
-    background-color: #FFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  /*flex-shrink: 3;*/
+  margin: 10px;
+  padding: 20px;
+  width: 18em;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 /*.skill-card:hover {*/
@@ -22,112 +22,152 @@
 /*}*/
 
 .skill-card__header {
-    position: relative;
-    background-color: #eb6c3f;
-    height: 200px;
-    margin: -20px -20px 20px -20px;
-    transition: height .5s;
-    overflow: hidden;
+  position: relative;
+  background-color: #eb6c3f;
+  height: 200px;
+  margin: -20px -20px 20px -20px;
+  transition: height 0.5s;
+  overflow: hidden;
 }
 
 .skill-card .skill-card__header .skill-card__icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
-    display: block;
-    width: 320px;
-    height: 200px;
-    transition: transform .5s;
-    cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  display: block;
+  width: 320px;
+  height: 200px;
+  transition: transform 0.5s;
+  cursor: pointer;
+}
+
+.skill-card__header-enlarged {
+  position: relative;
+  background-color: #eb6c3f;
+  height: 200px;
+  margin: -20px 0px 20px -20px;
+  transition: height 0.5s;
+  overflow: hidden;
+}
+
+.skill-card__icon-enlarged {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  cursor: pointer;
 }
 
 .skill-card .skill-card__body {
-    height: 120px;
-    transition: height .5s;
-    overflow: hidden;
+  height: 120px;
+  transition: height 0.5s;
+  overflow: hidden;
 }
 
 .skill-card .skill-card__body .skill-card__title {
-    font-size: 1.4em;
-    font-weight: 600;
-    text-transform: uppercase;
+  font-size: 1.4em;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .skill-card .skill-card__body .skill-card__duration {
-    color: #9E9E9E;
-    font-style: italic;
+  color: #9e9e9e;
+  font-style: italic;
 }
 
 .skill-card .skill-card__body .skill-card__knowledge {
-    margin-top: 10px;
-    color: #424242;
+  margin-top: 10px;
+  color: #424242;
 }
 
-/*@media (max-width: 991px)*/
-/*.product-label.product-label-discount {*/
-/*    top: 11px !important;*/
-/*    right: 0 !important;*/
-/*    width: 45px !important;*/
-/*    height: 22px !important;*/
-/*    background: #ff002a 0 0 no-repeat padding-box !important;*/
-/*    border-radius: 3px 0 0 3px !important;*/
-/*}*/
-
 .skill-card__header .product-label-discount {
-    position: absolute;
-    top: 28px;
-    right: 4px;
-    left: auto;
-    height: 24px;
-    width: 78px;
-    padding: 3px 8px;
-    background-color: #ff002a;
-    color: #fff;
-    border-radius: 3px;
-    font-family: latoregular, helvetica, Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 900;
-    text-align: center;
+  position: absolute;
+  top: 28px;
+  right: 4px;
+  left: auto;
+  height: 24px;
+  width: 78px;
+  padding: 3px 8px;
+  background-color: #ff002a;
+  color: #fff;
+  border-radius: 3px;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
 }
 
 .skill-card__header .product-label-age {
-    position: absolute;
-    top: 56px;
-    right: 4px;
-    left: auto;
-    height: 24px;
-    width: 46px;
-    padding: 3px 8px;
-    background-color: green;
-    color: #fff;
-    border-radius: 3px;
-    font-family: latoregular, helvetica, Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 900;
-    text-align: center;
+  position: absolute;
+  top: 56px;
+  right: 4px;
+  left: auto;
+  height: 24px;
+  width: 46px;
+  padding: 3px 8px;
+  background-color: green;
+  color: #fff;
+  border-radius: 3px;
+  font-family: latoregular, helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.skill-card__header-enlarged .product-label-discount {
+  position: absolute;
+  top: 28px;
+  right: 4px;
+  left: auto;
+  height: 24px;
+  width: 78px;
+  padding: 3px 8px;
+  background-color: #ff002a;
+  color: #fff;
+  border-radius: 3px;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.skill-card__header-enlarged .product-label-age {
+  position: absolute;
+  top: 56px;
+  right: 4px;
+  left: auto;
+  height: 24px;
+  width: 46px;
+  padding: 3px 8px;
+  background-color: green;
+  color: #fff;
+  border-radius: 3px;
+  font-family: latoregular, helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  text-align: center;
 }
 
 .info_card {
-    /*padding: 5px;*/
-    margin: 0;
-    font-weight: bold;
-    color: gray;
+  /*padding: 5px;*/
+  margin: 0;
+  font-weight: bold;
+  color: gray;
 }
-.light_text{
-    font-weight: lighter;
+.light_text {
+  font-weight: lighter;
 }
 .info_card_sale {
-    margin: 0;
-    font-weight: bold;
-    color: #ff8152;;
+  margin: 0;
+  font-weight: bold;
+  color: #ff8152;
 }
 
 .bigSkillCard {
-    margin: 10px;
-    padding: 20px;
-    width: 36em;
-    background-color: #FFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: width 0.5s;
+  margin: 10px;
+  padding: 20px;
+  width: 36em;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: width 0.5s;
 }

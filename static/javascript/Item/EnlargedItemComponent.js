@@ -109,7 +109,10 @@ class EnlargedItemComponent {
     [header, this.createTitle()].forEach((elem) => divHead.appendChild(elem));
     return divHead;
   }
-
+  toggle(classes = []) {
+    this.elements.main.toggle(classes);
+    return this;
+  }
   createTitle() {
     const title_div = new Component("div").addClasses(["content_centered"]);
 
@@ -285,12 +288,26 @@ class EnlargedItemComponent {
   }
 
   downgrade() {
-    this.html.parentElement.insertBefore(
-      new ItemComponent(this.options).html,
-      this.html
-    );
+    const item = new ItemComponent(this.options);
+    if (this.elements.main.containsClass("draggable_card")) {
+      item.toggle([["draggable_card"], true]);
+      item.toggleDraggable();
+    }
+    this.html.parentElement.insertBefore(item.html, this.html);
     this.html.parentElement.removeChild(this.html);
+
+    this.options.parent.changeChild(this, item);
     return;
+  }
+  toggleDraggable() {
+    this.elements.main.toggleDraggable();
+    return this;
+  }
+  addEventListeners(functions = []) {
+    for (let i = 0; i < functions.length; i++) {
+      this.elements.main.addEventListener(functions[i]);
+    }
+    return this;
   }
 
   get html() {
@@ -302,61 +319,52 @@ class ItemComponent {
   constructor(options) {
     this.options = options;
     this.elements = {
-      main: document.createElement("div"),
+      main: new Component("div"),
       head: this.createHead(),
       body: this.createBody(),
     };
-    ["skill-card"].forEach((elem) => this.elements.main.classList.add(elem));
-    [this.elements.head, this.elements.body].forEach((elem) =>
-      this.elements.main.appendChild(elem)
-    );
-
-    this.addEventListeners();
+    this.elements.main
+      .addClasses(["skill-card"])
+      .addChildren([this.elements.head, this.elements.body]);
   }
 
   createBody() {
-    const body = document.createElement("div");
-    ["skill-card__body"].forEach((elem) => body.classList.add(elem));
-    body.appendChild(this.createTitle());
-
-    return body;
+    return new Component("div")
+      .addClasses(["skill-card__body"])
+      .addChildren([this.createTitle()]).html;
   }
 
   createTitle() {
-    const title_div = document.createElement("div");
-    ["content_centered"].forEach((elem) => title_div.classList.add(elem));
+    const title_div = new Component("div").addClasses(["content_centered"]);
 
-    const title = document.createElement("h2");
-    ["skill-card__title"].forEach((elem) => title.classList.add(elem));
-    title.textContent = this.options.name;
+    const title = new Component("h2")
+      .addClasses(["skill-card__title"])
+      .addTextContent(this.options.name);
 
-    const price = document.createElement("p");
-    ["info_card"].forEach((elem) => price.classList.add(elem));
-    price.textContent = this.options.price + " lei";
-    [title, this.createStarSystem(), price].forEach((elem) =>
-      title_div.appendChild(elem)
-    );
+    const price = new Component("p")
+      .addClasses(["info_card"])
+      .addTextContent(this.options.price + " lei");
 
+    title_div.addChildren([title.html, this.createStarSystem(), price.html]);
     if (this.options.discount > 0) {
-      const real_price = document.createElement("p");
-      ["info_card_sale"].forEach((elem) => real_price.classList.add(elem));
-      real_price.textContent =
-        this.options.price * (1 - this.options.discount / 100) + " lei";
-      [real_price].forEach((elem) => title_div.appendChild(elem));
+      const real_price = new Component("p")
+        .addClasses(["info_card_sale"])
+        .addTextContent(
+          this.options.price * (1 - this.options.discount / 100) + " lei"
+        );
 
-      price.style.textDecoration = "line-through";
-      ["light-text"].forEach((cls) => price.classList.add(cls));
+      price.html.style.textDecoration = "line-through";
+      price.addClasses(["light-text"]);
+      title_div.addChildren([real_price.html]);
     }
-
-    return title_div;
+    return title_div.html;
   }
 
   createHead() {
-    const header = document.createElement("div");
-    ["skill-card__header"].forEach((elem) => header.classList.add(elem));
-
-    const imageAux = document.createElement("img");
-    ["skill-card__icon"].forEach((elem) => imageAux.classList.add(elem));
+    const header = new Component("div").addClasses(["skill-card__header"]);
+    const imageAux = new Component("img")
+      .addClasses(["skill-card__icon"])
+      .addListeners([() => this.upgrade()]);
 
     if (this.options.image === "")
       fetch(add_item_url, {
@@ -366,28 +374,26 @@ class ItemComponent {
         },
       })
         .then((response) => response.json())
-        .then((data) => (imageAux.src = data));
-    else imageAux.src = this.options.image;
+        .then((data) => imageAux.addSrc(data));
+    else imageAux.addSrc(this.options.image);
 
-    header.appendChild(imageAux);
+    header.addChild(imageAux.html);
 
     if (this.options.discount > 0) {
-      const discount = document.createElement("span");
-      ["product-label-discount"].forEach((elem) =>
-        discount.classList.add(elem)
-      );
-      discount.textContent = "-" + this.options.discount + "%";
-      header.appendChild(discount);
+      const discount = new Component("span")
+        .addClasses(["product-label-discount"])
+        .addTextContent("-" + this.options.discount + "%");
+      header.addChild(discount.html);
     }
 
     if (this.options.is_for_adults === 1) {
-      const adult = document.createElement("span");
-      ["product-label-age"].forEach((elem) => adult.classList.add(elem));
-      adult.textContent = "+18";
-      header.appendChild(adult);
+      const adult = new Component("span")
+        .addClasses(["product-label-age"])
+        .addTextContent("+18");
+      header.addChild(adult.html);
     }
 
-    return header;
+    return header.html;
   }
 
   createStarSystem() {
@@ -501,21 +507,35 @@ class ItemComponent {
     body.addChildren([generalRating.html]);
     return body.html;
   }
-  addEventListeners() {
-    this.elements.head.firstChild.addEventListener("click", () => {
-      this.upgrade();
-    });
+  addEventListeners(functions = []) {
+    for (let i = 0; i < functions.length; i++) {
+      this.elements.main.addEventListener(functions[i]);
+    }
+    return this;
   }
+  toggle(classes = []) {
+    this.elements.main.toggle(classes);
+    return this;
+  }
+
   upgrade() {
-    this.elements.main.parentElement.insertBefore(
-      new EnlargedItemComponent(this.options).html,
-      this.elements.main
-    );
-    this.elements.main.parentElement.removeChild(this.elements.main);
-    return;
+    const item = new EnlargedItemComponent(this.options);
+    if (this.elements.main.containsClass("draggable_card")) {
+      item.toggleDraggable();
+      item.toggle([["draggable_card", true]]);
+    }
+
+    this.html.parentElement.insertBefore(item.html, this.html);
+    this.html.parentElement.removeChild(this.html);
+
+    this.options.parent.changeChild(this, item);
+  }
+  toggleDraggable() {
+    this.elements.main.toggleDraggable();
+    return this;
   }
   get html() {
-    return this.elements.main;
+    return this.elements.main.html;
   }
 }
 

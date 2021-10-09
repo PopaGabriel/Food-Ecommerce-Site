@@ -1,3 +1,5 @@
+import Component from "../BasicComponents/Component.js";
+
 export default class FormSection {
   constructor(options = { title: "", textOk: "" }) {
     this.options = options;
@@ -6,67 +8,58 @@ export default class FormSection {
     return this;
   }
   makeBody() {
-    const main = document.createElement("div");
-    main.classList.add("form_create_review");
+    const main = new Component("div").addClasses(["form_create_review"]);
+    const window_div = new Component("div").addClasses(["confirm__window"]);
+    const window = new Component("div").addClasses(["confirm__titlebar"]);
 
-    const window_div = document.createElement("div");
-    window_div.classList.add("confirm__window");
+    const title = new Component("span")
+      .addClasses(["confirm__title"])
+      .addTextContent(this.options.title);
 
-    const window = document.createElement("div");
-    window.classList.add("confirm__titlebar");
+    const buttonExit = new Component("button")
+      .addClasses(["confirm__close"])
+      .addTextContent("×");
 
-    const title = document.createElement("span");
-    title.classList.add("confirm__title");
-    title.textContent = this.options.title;
+    window.addChildren([title.html, buttonExit.html]);
+    window_div.addChild(window.html);
+    main.addChild(window_div.html);
 
-    const buttonExit = document.createElement("button");
-    buttonExit.classList.add("confirm__close");
-    buttonExit.textContent = "×";
+    const content = new Component("div").addClasses(["confirm__content"]);
 
-    window.append(title);
-    window.append(buttonExit);
-    window_div.append(window);
-    main.append(window_div);
+    const input_title = new Component("input")
+      .addClasses(["search__input", "input_title"])
+      .addType("text")
+      .addPlaceholder("write section title");
 
-    const content = document.createElement("div");
-    content.classList.add("confirm__content");
+    const surrogateText = new Component("p")
+      .addClasses(["p_test"])
+      .addTextContent("title");
 
-    const input_title = document.createElement("input");
-    input_title.classList.add("search__input", "input_title");
-    input_title.type = "text";
-    input_title.placeholder = "write section title";
+    surrogateText.addChild(input_title.html);
+    content.addChild(surrogateText.html);
+    window_div.addChild(content.html);
 
-    const surrogateText = document.createElement("p");
-    surrogateText.classList.add("p_test");
-    surrogateText.textContent = "title";
+    const command = new Component("div").addClasses(["confirm__buttons"]);
 
-    surrogateText.append(input_title);
-    content.append(surrogateText);
-    window_div.append(content);
+    const buttonOk = new Component("button")
+      .addClasses([
+        "confirm__button",
+        "confirm__button--fill",
+        "confirm__button--add",
+      ])
+      .addTextContent(this.options.textOk);
 
-    const command = document.createElement("div");
-    command.classList.add("confirm__buttons");
+    const buttonCancel = new Component("button")
+      .addTextContent(this.options.textCancel)
+      .addClasses([
+        "confirm__button",
+        "confirm__button--fill",
+        "confirm__button--cancel",
+      ]);
+    command.addChildren([buttonOk.html, buttonCancel.html]);
+    window_div.addChild(command.html);
 
-    const buttonOk = document.createElement("button");
-    buttonOk.textContent = this.options.textOk;
-    buttonOk.classList.add(
-      "confirm__button",
-      "confirm__button--fill",
-      "confirm__button--add"
-    );
-
-    const buttonCancel = document.createElement("button");
-    buttonCancel.textContent = this.options.textCancel;
-    buttonCancel.classList.add(
-      "confirm__button",
-      "confirm__button--fill",
-      "confirm__button--cancel"
-    );
-    command.append(buttonOk);
-    command.append(buttonCancel);
-    window_div.append(command);
-
-    return main;
+    return main.html;
   }
   changeState() {
     if (this.state === "hidden") {

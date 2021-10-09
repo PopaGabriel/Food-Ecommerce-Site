@@ -16,8 +16,15 @@ export default class Component {
     this.base.addEventListener(listener[0], listener[1]);
     return this;
   }
+  removeEventListener(listener = []) {
+    this.base.removeEventListener(listener[0], listener[1]);
+  }
   addName(name = "") {
     this.base.name = name;
+    return this;
+  }
+  addChildBefore(current, destination) {
+    this.base.insertBefore(current, destination.element);
     return this;
   }
   addId(id = "") {
@@ -53,8 +60,20 @@ export default class Component {
       this.base.classList.toggle(classes[i][0], classes[i][1]);
     return this;
   }
+  addSrc(src = "") {
+    this.base.src = src;
+    return this;
+  }
+  addChild(child = "") {
+    this.base.append(child);
+    return this;
+  }
   containsClass(classes = "") {
     return this.base.classList.contains(classes);
+  }
+  toggleDraggable() {
+    this.base.draggable = !this.base.draggable;
+    return this;
   }
   get html() {
     return this.base;

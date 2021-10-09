@@ -11,31 +11,28 @@ const url_add_section = "/section/section_add";
 class Menu {
   constructor(options) {
     this.options = options;
+    this.children = [];
     this.elements = {
-      main: document.createElement("div"),
+      main: new Component("div"),
       header: this.createHeader(),
       body: this.createBody(),
     };
+    this.editMode = false;
     this.formSection = null;
-    this.elements.main.appendChild(this.elements.header);
-    this.elements.main.appendChild(this.elements.body);
-    document.body.appendChild(this.elements.main);
+    this.elements.main.addChildren([this.elements.header, this.elements.body]);
+    document.body.appendChild(this.elements.main.html);
   }
 
   createHeader() {
-    const header = document.createElement("div");
+    const header = new Component("div");
 
-    const title_div = document.createElement("div");
-    title_div.classList.add("center");
+    const title_div = new Component("div").addClasses(["center"]);
 
-    const title = document.createElement("h3");
-    title.textContent = this.options.name;
-    title.classList.add();
-    title_div.appendChild(title);
-    header.appendChild(title_div);
+    const title = new Component("h3").addTextContent(this.options.name);
+    title_div.addChild(title.html);
+    header.addChild(title_div.html);
 
-    const command_div = document.createElement("div");
-    command_div.classList.add("center");
+    const command_div = new Component("div").addClasses(["center"]);
 
     const button_add_section = new Component("button")
       .addClasses(["btn-test", "draw-border"])
@@ -48,7 +45,11 @@ class Menu {
               textOk: "Confirm",
               textCancel: "Cancel",
             })
-              .addOn_cancel()
+              .addOn_cancel([
+                () => {
+                  this.formSection = null;
+                },
+              ])
               .addOn_ok([
                 () => {
                   title = this.formSection.value;
@@ -66,7 +67,7 @@ class Menu {
                     .then((response) => response.json())
                     .then((data) => {
                       if (data !== "error")
-                        this.elements.main.append(
+                        this.elements.main.addChild(
                           new Section({
                             name: title,
                             items: [],
@@ -79,12 +80,11 @@ class Menu {
                 },
               ])
               .addOn_exit();
-            command_div.append(this.formSection.html);
+            command_div.addChild(this.formSection.html);
           } else this.formSection.toggleState();
         },
       ])
       .addTextContent("Add Section").html;
-    command_div.appendChild(button_add_section);
 
     const button_delete_Menu = new Component("button")
       .addClasses(["btn-test", "draw-border"])
@@ -118,22 +118,39 @@ class Menu {
         },
       ])
       .addTextContent("Delete Menu").html;
-    command_div.appendChild(button_delete_Menu);
 
     const button_update_Menu = new Component("button")
       .addClasses(["btn-test", "draw-border"])
-      .addListeners([() => {}])
+      .addListeners([
+        () => {
+          this.action = { target: null, item: null, action: null };
+          if (!this.editMode) {
+            for (let i = 0; i < this.children.length; i++) {
+              this.children[i].makeDraggable(this.action);
+            }
+            this.editMode = true;
+          } else {
+            for (let i = 0; i < this.children.length; i++) {
+              this.children[i].unMakeDraggable();
+            }
+            this.editMode = false;
+          }
+        },
+      ])
       .addTextContent("Update Menu").html;
-    command_div.appendChild(button_update_Menu);
-
-    header.appendChild(command_div);
-    return header;
+    command_div.addChildren([
+      button_add_section,
+      button_delete_Menu,
+      button_update_Menu,
+    ]);
+    header.addChild(command_div.html);
+    return header.html;
   }
   remove() {
     this.html.parentElement.removeChild(this.html);
   }
   createBody() {
-    const body = document.createElement("div");
+    const body = new Component("div");
 
     fetch(url_get_sections + this.options.id, {
       method: "GET",
@@ -141,14 +158,16 @@ class Menu {
     })
       .then((response) => response.json())
       .then((data) => {
-        for (let i = 0; i < data.length; i++)
-          body.appendChild(new Section(data[i]).html);
+        for (let i = 0; i < data.length; i++) {
+          let section = new Section(data[i]);
+          body.addChild(section.html);
+          this.children.push(section);
+        }
       });
-    return body;
+    return body.html;
   }
   get html() {
-    return this.elements.main;
+    return this.elements.main.html;
   }
 }
-// new Menu({ name: "Test", id: 3 }).html;
 export default Menu;

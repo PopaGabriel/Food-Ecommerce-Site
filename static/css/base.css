@@ -55,6 +55,15 @@
   color: darkgoldenrod;
   cursor: pointer;
 }
+.section_container {
+  min-height: 100px;
+}
+.draggable_card_selected {
+  opacity: 0.5;
+}
+.draggable_card {
+  cursor: move;
+}
 form_create_review {
   display: inline-block;
 }

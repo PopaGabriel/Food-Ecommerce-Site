@@ -10,6 +10,8 @@ from Proiect_atelier_google.settings import MEDIA_URL
 from .models import MenuItem
 from .forms import AddMenuItemForm
 
+# TODO still have to add the ingredients part
+
 
 @login_required()
 def AddMenuItemView(request):
@@ -19,15 +21,13 @@ def AddMenuItemView(request):
 
             if form.is_valid():
                 item = form.save(commit=False)
-                item.is_available = True
                 form.save()
-                menu = MenuItem.objects.filter(id=item.id)
-                ingredients = list(menu[0].ingredients.all())
-                menu = list(menu.values())
-                menu[0]["ingredients"] = ingredients
+                dictionary = item.__dict__
+                del dictionary["_state"]
+                dictionary["image"] = dictionary["image"].name
             else:
                 JsonResponse(form.errors, safe=False)
-            return JsonResponse(menu[0], safe=False)
+            return JsonResponse(dictionary, safe=False)
         except ObjectDoesNotExist as obj:
             return JsonResponse(obj.args, safe=False)
         except KeyError as key:

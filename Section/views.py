@@ -13,8 +13,9 @@ def SectionAddView(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            menu = Menu.objects.get(id=data['menu'])
             section = Section.objects.create(
-                name=data['title'], menu=Menu.objects.get(id=data['menu']))
+                name=data['title'], menu=menu, position=len(menu.sections.all()) + 1)
             section.save()
             return JsonResponse(section.id, safe=False)
         except ObjectDoesNotExist:

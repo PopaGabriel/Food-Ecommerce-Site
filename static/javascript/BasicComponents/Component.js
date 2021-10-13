@@ -18,6 +18,7 @@ export default class Component {
   }
   removeEventListener(listener = []) {
     this.base.removeEventListener(listener[0], listener[1]);
+    return this;
   }
   addName(name = "") {
     this.base.name = name;
@@ -73,6 +74,10 @@ export default class Component {
   }
   toggleDraggable() {
     this.base.draggable = !this.base.draggable;
+    return this;
+  }
+  removeAllChildren() {
+    while (this.base.firstChild) this.base.removeChild(this.base.lastChild);
     return this;
   }
   get html() {

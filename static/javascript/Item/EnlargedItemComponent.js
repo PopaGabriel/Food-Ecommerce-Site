@@ -15,7 +15,8 @@ class EnlargedItemComponent {
     };
     this.elements.main
       .addClasses(["row", "bigSkillCard"])
-      .addChildren([this.elements.head, this.elements.info]);
+      .addChildren([this.elements.head, this.elements.info])
+      .addName(this.options.id);
   }
 
   createInfo() {
@@ -325,7 +326,8 @@ class ItemComponent {
     };
     this.elements.main
       .addClasses(["skill-card"])
-      .addChildren([this.elements.head, this.elements.body]);
+      .addChildren([this.elements.head, this.elements.body])
+      .addName(this.options.id);
   }
 
   createBody() {

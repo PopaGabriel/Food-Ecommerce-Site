@@ -102,6 +102,8 @@ class AddItemComponent {
       let form = new FormData(this.elements.base);
       form.append("ingredients", ingredients);
       form.append("section", this.options.section_id);
+      form.append("position", this.options.parent.numberElements() + 1);
+      form.append("is_available", true);
       if (!form.get("adult")) form.append("is_for_adults", 0);
       else form.append("is_for_adults", 1);
 

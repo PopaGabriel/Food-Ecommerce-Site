@@ -12,6 +12,7 @@ class Section {
   constructor(options) {
     this.options = options;
     this.children = [];
+    this.moveCommand = new Component("div");
     this.elements = {
       main: new Component("div"),
       head: this.createHead(),
@@ -28,7 +29,8 @@ class Section {
     const title_div = new Component("div");
     const title = new Component("h2")
       .addTextContent(this.options.name)
-      .addClasses(["center"]);
+      .addClasses(["center", "row"])
+      .addChild(this.moveCommand.html);
     title_div.addChild(title.html);
     head.addChild(title_div.html);
 
@@ -78,6 +80,9 @@ class Section {
                   .then((response) => response.json())
                   .then((data) => {
                     if (data !== "error") {
+                      this.options.parent
+                        .deleteSection(this)
+                        .updateSectionMoveCommand();
                       this.remove();
                     }
                   });
@@ -89,15 +94,6 @@ class Section {
     command_div.addChildren([button_add_item, button_delete_section]);
     head.addChild(command_div.html);
     return head;
-  }
-  addItem(data) {
-    data["rating_user"] = 0;
-    data["rating"] = 0;
-    data["image"] = "/media/" + data["image"];
-    this.form_item = null;
-    let item = new ItemComponent(data);
-    this.elements.body.addChild(item.html);
-    this.children.push(item);
   }
   makeDraggable(action) {
     // the item that wants to be moved
@@ -167,6 +163,24 @@ class Section {
           ],
         ]);
     }
+    return this;
+  }
+  addItem(data) {
+    data["rating_user"] = 0;
+    data["rating"] = 0;
+    if (data["image"] !== undefined) data["image"] = "/media/" + data["image"];
+    else data["image"] = "/media/images/Salam.jpg";
+    this.form_item = null;
+    let item = new ItemComponent(data);
+    this.elements.body.addChild(item.html);
+    this.children.push(item);
+  }
+  getItemList() {
+    const dict = {};
+    for (let i = 0; i < this.elements.body.html.children.length; i++) {
+      dict[this.elements.body.html.children[i].name] = { pos: i };
+    }
+    return dict;
   }
   unMakeDraggable() {
     this.elements.body.toggle([["section_container", false]]);
@@ -176,12 +190,22 @@ class Section {
         console.log(item);
       },
     ]);
-    for (let i = 0; i < this.children.length; i++) {
-      this.children[i].toggle([["draggable_card", false]]).toggleDraggable();
+    for (let i = 0; i < this.elements.body.html.children.length; i++) {
+      this.elements.body.html.children[i].classList.toggle(
+        "draggable_card",
+        false
+      );
+      this.elements.body.html.children[i].draggable =
+        !this.elements.body.html.children[i].draggable;
     }
+    return this;
   }
   populateSection() {
     const body = new Component("div").addClasses(["center", "row"]);
+    this.options.items.sort(function (first, second) {
+      return first.position - second.position;
+    });
+
     for (let i = 0; i < this.options.items.length; i++) {
       this.options.items[i].image = "/media/" + this.options.items[i].image;
       this.options.items[i].parent = this;
@@ -191,14 +215,53 @@ class Section {
     }
     return body;
   }
+  updateMoveCommand(pos) {
+    this.moveCommand.removeAllChildren();
+    this.addMoveCommand(pos);
+    return this;
+  }
+  removeMoveCommand() {
+    this.moveCommand.removeAllChildren();
+    return this;
+  }
+  addMoveCommand(pos) {
+    const buttonMoveUp = new Component("span")
+      .addTextContent("arrow_upward")
+      .addClasses(["material-icons"])
+      .addEventListener([
+        "click",
+        () => {
+          this.options.parent.moveSection(this, "upward");
+        },
+      ]);
+
+    const buttonMoveDown = new Component("span")
+      .addTextContent("arrow_downward")
+      .addClasses(["material-icons"])
+      .addEventListener([
+        "click",
+        () => {
+          this.options.parent.moveSection(this, "downward");
+        },
+      ]);
+
+    if (pos === "single") return;
+    if (pos === "first") this.moveCommand.addChild(buttonMoveDown.html);
+    else if (pos == "last") this.moveCommand.addChild(buttonMoveUp.html);
+    else this.moveCommand.addChildren([buttonMoveDown.html, buttonMoveUp.html]);
+  }
   changeChild(child = null, item = null) {
     if (child && item) this.children[this.children.indexOf(child)] = item;
     else if (!item) this.children.push(item);
     else return this;
     return this;
   }
+  numberElements() {
+    return this.elements.body.html.children.length;
+  }
   remove() {
-    this.elements.main.parentElement.removeChild(this.elements.main);
+    this.elements.main.html.parentElement.removeChild(this.elements.main.html);
+    return this;
   }
   get html() {
     return this.elements.main.html;

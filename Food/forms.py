@@ -11,4 +11,5 @@ class AddMenuItemForm(forms.ModelForm):
                   'name',
                   'price',
                   'discount',
-                  'image']
+                  'image',
+                  'position']

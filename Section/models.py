@@ -9,10 +9,10 @@ class Section(models.Model):
     menu = models.ForeignKey(Menu,
                              on_delete=models.CASCADE,
                              related_name='sections')
+    position = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('Restaurants:detail_restaurant', args=[str(self.menu.restaurant.id)])
-

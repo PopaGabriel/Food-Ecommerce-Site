@@ -16,6 +16,8 @@ class MenuItem(models.Model):
     ingredients = models.ManyToManyField(
         'Ingredients.Ingredient', related_name='ingredients')
 
+    position = models.IntegerField(default=0)
+
     is_for_adults = models.IntegerField(choices=AdultOriented.choices,
                                         default=AdultOriented.No)
     is_available = models.BooleanField(default=True)

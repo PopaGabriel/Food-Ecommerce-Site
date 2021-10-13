@@ -4,6 +4,7 @@ import ConfirmAlert from "../Confirms/ConfirmAlert.js";
 import FormSection from "../Forms/FormSection.js";
 
 const delete_menu_url = "/Restaurants/Menu/delete_menu/";
+const url_update_menu = "/Restaurants/Menu/update_menu/";
 const url_add_menu = "/Restaurants/Menu/add_menu/";
 const url_get_sections = "/section/section_get/menu=";
 const url_add_section = "/section/section_add";
@@ -11,6 +12,7 @@ const url_add_section = "/section/section_add";
 class Menu {
   constructor(options) {
     this.options = options;
+    this.options["restaurant_id"] = 1;
     this.children = [];
     this.elements = {
       main: new Component("div"),
@@ -66,15 +68,17 @@ class Menu {
                   })
                     .then((response) => response.json())
                     .then((data) => {
-                      if (data !== "error")
-                        this.elements.main.addChild(
-                          new Section({
-                            name: title,
-                            items: [],
-                            id: data,
-                          }).html
-                        );
-                      this.formSection = null;
+                      if (data !== "error") {
+                        const section = new Section({
+                          parent: this,
+                          name: title,
+                          items: [],
+                          id: data,
+                        });
+                        this.elements.main.addChild(section.html);
+                        this.children.push(section);
+                        this.formSection = null;
+                      }
                     })
                     .catch((this.formSection = null));
                 },
@@ -125,14 +129,33 @@ class Menu {
         () => {
           this.action = { target: null, item: null, action: null };
           if (!this.editMode) {
-            for (let i = 0; i < this.children.length; i++) {
-              this.children[i].makeDraggable(this.action);
+            if (this.children.length === 1) {
+              this.children[0]
+                .makeDraggable(this.action)
+                .addMoveCommand("single");
+            } else {
+              for (let i = 0; i < this.children.length; i++) {
+                this.children[i].makeDraggable(this.action);
+                if (i === 0) this.children[i].addMoveCommand("first");
+                else if (i === this.children.length - 1)
+                  this.children[i].addMoveCommand("last");
+                else this.children[i].addMoveCommand("");
+              }
             }
             this.editMode = true;
           } else {
             for (let i = 0; i < this.children.length; i++) {
-              this.children[i].unMakeDraggable();
+              this.children[i].unMakeDraggable().removeMoveCommand();
             }
+            const id = this.options.id;
+            fetch(url_update_menu + this.options.restaurant_id, {
+              method: "POST",
+              headers: {
+                "X-CSRFToken": csrftoken,
+              },
+              body: JSON.stringify({ id: id, sections: this.getUpdateData() }),
+            }).then((response) => response.json());
+            // .then((data) => console.log(data));
             this.editMode = false;
           }
         },
@@ -146,8 +169,14 @@ class Menu {
     header.addChild(command_div.html);
     return header.html;
   }
-  remove() {
-    this.html.parentElement.removeChild(this.html);
+  getUpdateData() {
+    const dict = {};
+    for (let i = 0; i < this.children.length; i++)
+      dict[this.children[i].options.id] = {
+        items: this.children[i].getItemList(),
+        pos: i,
+      };
+    return dict;
   }
   createBody() {
     const body = new Component("div");
@@ -158,13 +187,67 @@ class Menu {
     })
       .then((response) => response.json())
       .then((data) => {
+        data.sort((first, second) => {
+          return first.position - second.position;
+        });
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
+          data[i]["parent"] = this;
           let section = new Section(data[i]);
           body.addChild(section.html);
           this.children.push(section);
         }
       });
+    this.children.sort((first, second) => {
+      return first.options.position - second.options.position;
+    });
     return body.html;
+  }
+  deleteSection(section) {
+    this.children.splice(this.children.indexOf(section), 1);
+    return this;
+  }
+  updateSectionMoveCommand() {
+    if (this.children.length === 1) {
+      this.children[0].updateMoveCommand("single");
+      return this;
+    }
+    for (let i = 0; i < this.children.length; i++) {
+      if (i === 0) this.children[i].updateMoveCommand("first");
+      else if (i === this.children.length - 1)
+        this.children[i].updateMoveCommand("last");
+      else this.children[i].updateMoveCommand("");
+    }
+    return this;
+  }
+  moveSection(child, direction) {
+    const indexChild = this.children.indexOf(child);
+    this.children.splice(indexChild, 1);
+    if (direction === "upward") {
+      child.remove();
+      const target = this.elements.body.children[indexChild - 1];
+      this.children.splice(indexChild - 1, 0, child);
+      this.elements.body.insertBefore(child.html, target);
+    } else if (direction === "downward") {
+      child.remove();
+      const target = this.elements.body.children[indexChild].nextElementSibling;
+
+      if (target) this.elements.body.insertBefore(child.html, target);
+      else this.elements.body.appendChild(child.html);
+      this.children.splice(indexChild + 1, 0, child);
+    }
+    this.updateSectionMoveCommand();
+    return this;
+  }
+  remove() {
+    this.html.parentElement.removeChild(this.html);
+  }
+  set options(options) {
+    this._options = options;
+    return this;
+  }
+  get options() {
+    return this._options;
   }
   get html() {
     return this.elements.main.html;

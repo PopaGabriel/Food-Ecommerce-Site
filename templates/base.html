@@ -1,27 +1,68 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-<head>
-    <title> Restaurants App</title>
-    <meta name='viewport' content=' width=device-width, initial-scale=0.1, maximum-scale=1, user-scalable=1'/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/card/cards.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/input/input.css' %}"/>
-    <link rel="stylesheet" href='{% static 'css/base.css' %}'/>
-    <link rel="stylesheet" href='{% static 'css/Confirm_button/Confirm_button.css' %}'/>
-    <link rel="stylesheet" href="{% static 'css/buttons/buttons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/SearchBar.css' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href={% static 'images/icon/apple-touch-icon.png' %}/>
-    <link rel="icon" type="image/png" sizes="32x32" href={% static 'images/icon/favicon-32x32.png' %}/>
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/icon/favicon-16x16.png' %}"/>
-    <link rel="manifest" href="{% static 'images/icon/site.webmanifest' %}">
-
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark pb-1">
+  <head>
+    <title>Restaurants App</title>
+    <meta
+      name="viewport"
+      content=" width=device-width, initial-scale=1.0, maximum-scale=10, user-scalable=1"
+    />
+    <link async
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap"
+      media="print" onload="this.media='all'"
+    />
+    <link async
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+      media="print" onload="this.media='all'"
+    />
+    <link rel="stylesheet" href="{% static 'css/card/cards.css' %}" 
+      media="print" 
+      onload="this.media='all'"/>
+    <link rel="stylesheet" href="{% static 'css/input/input.css' %}" media="print" onload="this.media='all'"/>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" media="print" onload="this.media='all'"/>
+    <link
+      rel="stylesheet"
+      href="{% static 'css/Confirm_button/Confirm_button.css' %}" media="print" onload="this.media='all'"
+    />
+    <link rel="stylesheet" href="{% static 'css/buttons/buttons.css' %}" media="print" onload="this.media='all'"/>
+    <link rel="stylesheet" href="{% static 'css/SearchBar.css' %}" media="print" onload="this.media='all'"/>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{% static
+    'images/icon/apple-touch-icon.png' %}"
+    media="print" onload="this.media='all'"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{% static 'images/icon/favicon-32x32.png' %}"
+      media="print" onload="this.media='all'"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'images/icon/favicon-16x16.png' %}"
+      media="print" onload="this.media='all'"
+    />
+    <link rel="manifest" href="{% static 'images/icon/site.webmanifest' %}" media="print" onload="this.media='all'"/>
+  </head>
+  <body>
+    <nav class="NavMain">
+      <div class="logo">
+        <h4>The nav Bar</h4>
+      </div>
+      <div class="burger_link">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </nav>
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark pb-1">
     {% if user.is_authenticated %}
         <a class="navbar-brand" href={% url "home" %}> Welcome {{ user.username }}</a>
     {% else %}
@@ -69,39 +110,31 @@
         </ul>
 
     </div>
-</nav>
+</nav> -->
 
-<div class="container">
-    {% block content %}{% endblock %}
-</div>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-<script type="text/javascript">
-    const user = '{{ request.user }}'
+    <div class="container">{% block content %}{% endblock %}</div>
+    <script type="text/javascript">
+      const user = "{{ request.user }}";
 
-    function getCookie(name) {
+      function getCookie(name) {
         let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
             }
+          }
         }
         return cookieValue;
-    }
+      }
 
-    const csrftoken = getCookie('csrftoken');
-</script>
-</body>
+      const csrftoken = getCookie("csrftoken");
+    </script>
+    <script async type="module" src={% static "javascript/Base/Base.js"%} ></script>
+  </body>
 </html>

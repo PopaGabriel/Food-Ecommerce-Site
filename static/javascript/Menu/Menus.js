@@ -190,7 +190,6 @@ class Menu {
         data.sort((first, second) => {
           return first.position - second.position;
         });
-        console.log(data);
         for (let i = 0; i < data.length; i++) {
           data[i]["parent"] = this;
           let section = new Section(data[i]);

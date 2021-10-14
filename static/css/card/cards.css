@@ -67,6 +67,8 @@
 .skill-card .skill-card__body .skill-card__title {
   font-size: 1.4em;
   font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0;
   text-transform: uppercase;
 }
 

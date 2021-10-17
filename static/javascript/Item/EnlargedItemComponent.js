@@ -1,7 +1,8 @@
 import Component from "../BasicComponents/Component.js";
 
 const add_item_url = "/Restaurants/Menu/Food/get_basic_item";
-const add_rating = "/ratings/add_review/item=<int:id>&&mark=<int:mark>";
+const add_rating =
+  "/ratings/add_review/item=<int:id>&&mark=<int:mark>&&target_type=<str:type>";
 
 class EnlargedItemComponent {
   constructor(options) {
@@ -85,6 +86,7 @@ class EnlargedItemComponent {
         .then((data) => (imageAux.src = data));
     else imageAux.src = this.options.image;
     imageAux.classList.add("skill-card__icon-enlarged");
+    imageAux.alt = "Food Image";
 
     imageAux.addEventListener("click", () => {
       this.downgrade();
@@ -170,9 +172,9 @@ class EnlargedItemComponent {
   createStarSystem() {
     const body = new Component("div").addClasses(["row", "content_centered"]);
 
-    const generalRating = new Component("p").addTextContent(
-      "(" + this.options.rating + ")"
-    );
+    const generalRating = new Component("p")
+      .addTextContent("(" + this.options.rating + ")")
+      .addClasses(["yellow_color"]);
 
     const list_stars = [];
     for (let i = 0; i < 5; i++) list_stars.push(new Component("span"));
@@ -220,8 +222,9 @@ class EnlargedItemComponent {
 
               fetch(
                 add_rating
-                  .replace("<int:id>", "" + this.options.id)
-                  .replace("<int:mark>", "" + 0),
+                  .replace("<int:id>", this.options.id)
+                  .replace("<int:mark>", 0)
+                  .replace("<str:type>", "food"),
                 {
                   method: "POST",
                   headers: {
@@ -256,8 +259,9 @@ class EnlargedItemComponent {
             this.options.rating_user = list_stars.indexOf(elem) + 1;
             fetch(
               add_rating
-                .replace("<int:id>", "" + this.options.id)
-                .replace("<int:mark>", "" + (list_stars.indexOf(elem) + 1)),
+                .replace("<int:id>", this.options.id)
+                .replace("<int:mark>", list_stars.indexOf(elem) + 1)
+                .replace("<str:type>", "food"),
               {
                 method: "POST",
                 headers: {
@@ -366,7 +370,8 @@ class ItemComponent {
     const header = new Component("div").addClasses(["skill-card__header"]);
     const imageAux = new Component("img")
       .addClasses(["skill-card__icon"])
-      .addListeners([() => this.upgrade()]);
+      .addListeners([() => this.upgrade()])
+      .addAlt("Food Image");
 
     if (this.options.image === "")
       fetch(add_item_url, {
@@ -401,9 +406,9 @@ class ItemComponent {
   createStarSystem() {
     const body = new Component("div").addClasses(["row", "content_centered"]);
 
-    const generalRating = new Component("p").addTextContent(
-      "(" + this.options.rating + ")"
-    );
+    const generalRating = new Component("p")
+      .addTextContent("(" + this.options.rating + ")")
+      .addClasses(["yellow_color"]);
 
     const list_stars = [];
     for (let i = 0; i < 5; i++) list_stars.push(new Component("span"));
@@ -451,8 +456,9 @@ class ItemComponent {
 
               fetch(
                 add_rating
-                  .replace("<int:id>", "" + this.options.id)
-                  .replace("<int:mark>", "" + 0),
+                  .replace("<int:id>", this.options.id)
+                  .replace("<int:mark>", 0)
+                  .replace("<str:type>", "food"),
                 {
                   method: "POST",
                   headers: {
@@ -487,8 +493,9 @@ class ItemComponent {
             this.options.rating_user = list_stars.indexOf(elem) + 1;
             fetch(
               add_rating
-                .replace("<int:id>", "" + this.options.id)
-                .replace("<int:mark>", "" + (list_stars.indexOf(elem) + 1)),
+                .replace("<int:id>", this.options.id)
+                .replace("<int:mark>", list_stars.indexOf(elem) + 1)
+                .replace("<str:type>", "food"),
               {
                 method: "POST",
                 headers: {

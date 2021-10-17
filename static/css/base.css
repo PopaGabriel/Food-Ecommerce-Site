@@ -1,5 +1,13 @@
+:root {
+  --dark: black;
+  --dar-blue: #00203fff;
+  --blue: #5da2d5;
+  --yellow: #f3d250;
+  --red: #f78888;
+}
 body {
   margin: 0;
+  /* background-image: linear-gradient(to right, #f78888, #f3d250); */
 }
 *,
 ::after,
@@ -9,6 +17,7 @@ body {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+  color: black;
 }
 h2,
 .h2 {
@@ -20,11 +29,14 @@ nav {
   align-items: center;
   min-height: 8hv;
   font-family: sans-serif;
-  background-color: #5d4954;
+  background-image: linear-gradient(to right, #f78888, #f3d250, #5da2d5);
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
 }
+/* section {
+  background-color: #00203fff;
+} */
 
 h6,
 .h6,
@@ -42,6 +54,7 @@ h1,
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
+  color: #5da2d5;
 }
 
 h1,
@@ -109,6 +122,7 @@ h6,
   letter-spacing: 5px;
   font-size: 20px;
   margin: 0px;
+  color: #00203fff;
 }
 .nav_links {
   display: flex;
@@ -118,7 +132,7 @@ h6,
   width: 40%;
 }
 .nav_links a {
-  color: white;
+  color: #00203fff;
   letter-spacing: 3px;
   font-weight: bold;
   text-decoration: none;
@@ -126,7 +140,7 @@ h6,
 }
 .nav_links li {
   list-style: none;
-  color: white;
+  color: #00203fff;
 }
 .burger_link {
   display: none;
@@ -134,7 +148,7 @@ h6,
 .burger_link div {
   width: 25px;
   height: 3px;
-  background-color: white;
+  background-color: #00203fff;
   margin: 5px;
   transition: all 0.3s ease;
 }
@@ -148,7 +162,7 @@ h6,
     width: 60%;
   }
   .nav_links a {
-    color: white;
+    color: #00203fff;
     letter-spacing: 3px;
     font-weight: bold;
     text-decoration: none;
@@ -165,7 +179,8 @@ h6,
     right: 0px;
     height: 100px;
     top: 8vh;
-    background-color: #5d4954;
+    /* background-color: #ececec; */
+    background-image: linear-gradient(to right, #f78888, #f3d250, #5da2d5);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -294,6 +309,9 @@ h6,
   color: yellow;
   cursor: pointer;
 }
+.yellow_color {
+  color: yellow;
+}
 .star_select {
   color: darkgoldenrod;
   cursor: pointer;
@@ -307,6 +325,81 @@ h6,
 .draggable_card {
   cursor: move;
 }
-form_create_review {
-  display: inline-block;
+.buffer-top-100 {
+  min-height: 100px;
+}
+.body_page {
+  margin-top: 60px;
+}
+
+/* .pageBody {
+  padding: 10px;
+  margin: 10px;
+  /* overflow-x: hidden;
+}*/
+
+/* .section_discounts {
+  display: flex;
+
+  flex-wrap: wrap;
+  width: 60em;
+} */
+
+/* .section_restaurants {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  width: 100%;
+} */
+.restaurant_item {
+  margin: 10px;
+  width: 18em;
+  background-color: #00203fff;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-sizing: border-box;
+}
+.section_restaurants .restaurant_item h4 {
+  color: #5da2d5;
+}
+.label_info {
+  margin-left: 35px;
+  width: 200px;
+}
+.restaurant_item a {
+  color: #5da2d5;
+  font-weight: bold;
+  text-decoration: none;
+}
+.restaurant_item p {
+  /* color: #5da2d5; */
+  text-decoration: none;
+  font-weight: bold;
+}
+.restaurant_item a:hover {
+  color: #f3d250;
+  text-decoration: none;
+}
+.info_discount {
+  color: #ff8152;
+}
+.restaurant_item .restaurant_item_head img {
+  width: 18em;
+  height: 12em;
+}
+
+.transition-1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background-color: var(--dar-blue);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s ease-out;
+}
+.transition-1.is-active {
+  opacity: 1;
+  pointer-events: all;
 }

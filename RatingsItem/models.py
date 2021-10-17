@@ -11,7 +11,14 @@ class Ratings(models.Model):
                                related_name="personal_rating")
     food = models.ForeignKey('Food.MenuItem',
                              on_delete=models.CASCADE,
-                             related_name="ratings")
+                             related_name="ratings",
+                             null=True,
+                             default=None)
+    restaurant = models.ForeignKey('Restaurants.Restaurant',
+                                   on_delete=models.CASCADE,
+                                   related_name="ratings_restaurant",
+                                   null=True,
+                                   default=None)
     mark = models.IntegerField(validators=[MinValueValidator(0),
                                            MaxValueValidator(5)],
                                default=3)

@@ -52,6 +52,14 @@ export default class Component {
     this.base.min = min;
     return this;
   }
+  addHref(href) {
+    this.base.href = href;
+    return this;
+  }
+  addAlt(alt) {
+    this.base.alt = alt;
+    return this;
+  }
   addMax(max = 0) {
     this.base.max = max;
     return this;
@@ -79,6 +87,9 @@ export default class Component {
   removeAllChildren() {
     while (this.base.firstChild) this.base.removeChild(this.base.lastChild);
     return this;
+  }
+  get children() {
+    return this.html.children;
   }
   get html() {
     return this.base;

@@ -1,36 +1,38 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import AnonymousUser
+from django.http.response import JsonResponse
 from django.views.generic import (ListView, CreateView, UpdateView, DetailView)
 from .forms import (CreateRestaurantForm, EditRestaurantForm)
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
-from .models import Location, Restaurant
+from django.views.decorators.http import require_GET
+from .models import Restaurant
 from OrderFood.models import OrderFood
 from Food_basket.models import Basket
 
 
-class CreateLocationView(LoginRequiredMixin, CreateView):
-    template_name = 'Location/location_form.html'
-    model = Location
-    fields = '__all__'
+# TODO
+# class CreateLocationView(LoginRequiredMixin, CreateView):
+#     template_name = 'Location/location_form.html'
+#     model = Location
+#     fields = '__all__'
 
-    def get_success_url(self):
-        return reverse('Restaurants:view_location')
-
-
-class LocationView(LoginRequiredMixin, ListView):
-    model = Location
-    template_name = 'Location/locations_list_view.html'
-    paginate_by = 6
+#     def get_success_url(self):
+#         return reverse('Restaurants:view_location')
 
 
-class UpdateLocationView(LoginRequiredMixin, UpdateView):
-    model = Location
-    fields = '__all__'
-    template_name = 'Location/location_form.html'
+# class LocationView(LoginRequiredMixin, ListView):
+#     model = Location
+#     template_name = 'Location/locations_list_view.html'
+#     paginate_by = 6
 
-    def get_success_url(self):
-        return reverse('Restaurants:view_location')
+
+# class UpdateLocationView(LoginRequiredMixin, UpdateView):
+#     model = Location
+#     fields = '__all__'
+#     template_name = 'Location/location_form.html'
+
+#     def get_success_url(self):
+#         return reverse('Restaurants:view_location')
 
 
 class CreateRestaurantView(LoginRequiredMixin, CreateView):
@@ -46,7 +48,43 @@ class CreateRestaurantView(LoginRequiredMixin, CreateView):
         return reverse('Restaurants:view_location')
 
 
-class RestaurantView(ListView):
+def RestaurantGetListView(request, **kwargs):
+    print(kwargs)
+    pass
+
+
+@require_GET
+def RestaurantGetDiscountList(request, **kwargs) -> list[dict]:
+    """
+    Returns either all the discounted restaurants, or a certain number, 
+    the results are also sorted decresingly based on their max_discount
+
+    Args:
+        request (): The request comes from either a user or Anonymous
+
+    Returns:
+        list[dict]: The data is returned in a dict format
+    """
+    dicRestaurant = Restaurant.objects.filter(
+        best_discount__gt=0).order_by('best_discount')
+    ratings = [restaurant.getRatings for restaurant in dicRestaurant]
+    rating_user = [restaurant.getRatingUser(
+        request.user) for restaurant in dicRestaurant]
+    dicRestaurant = dicRestaurant.values('id', 'name', 'best_discount', 'main_image',
+                                         'is_open')
+    if kwargs["number_of"] == "all":
+        for index, restaurant in enumerate(dicRestaurant):
+            restaurant["rating"] = ratings[index]
+            restaurant["rating_user"] = rating_user[index]
+    else:
+        dicRestaurant = dicRestaurant[0:int(kwargs["number_of"])]
+        for index, restaurant in enumerate(dicRestaurant):
+            restaurant["rating"] = ratings[index]
+            restaurant["rating_user"] = rating_user[index]
+    return JsonResponse(list(dicRestaurant), safe=False)
+
+
+class homeView(ListView):
     model = Restaurant
     template_name = 'Restaurants/restaurant_list_view.html'
 

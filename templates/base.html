@@ -3,55 +3,93 @@
 <html lang="en">
   <head>
     <title>Restaurants App</title>
+    <meta name="theme-color" content="#ff8152">
     <meta
       name="viewport"
-      content=" width=device-width, initial-scale=1.0, maximum-scale=10, user-scalable=1"
+      content="width=device-width, initial-scale=1.0, maximum-scale=10, user-scalable=1"
     />
-    <link async
+    <link
+      async
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap"
-      media="print" onload="this.media='all'"
+      media="print"
+      onload="this.media='all'"
     />
-    <link async
+    <link
+      async
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
-      media="print" onload="this.media='all'"
+      media="print"
+      onload="this.media='all'"
     />
-    <link rel="stylesheet" href="{% static 'css/card/cards.css' %}" 
-      media="print" 
-      onload="this.media='all'"/>
-    <link rel="stylesheet" href="{% static 'css/input/input.css' %}" media="print" onload="this.media='all'"/>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" media="print" onload="this.media='all'"/>
     <link
       rel="stylesheet"
-      href="{% static 'css/Confirm_button/Confirm_button.css' %}" media="print" onload="this.media='all'"
+      href="{% static 'css/card/cards.css' %}"
+      media="print"
+      onload="this.media='all'"
     />
-    <link rel="stylesheet" href="{% static 'css/buttons/buttons.css' %}" media="print" onload="this.media='all'"/>
-    <link rel="stylesheet" href="{% static 'css/SearchBar.css' %}" media="print" onload="this.media='all'"/>
+    <link
+      rel="stylesheet"
+      href="{% static 'css/input/input.css' %}"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/base.css' %}"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/Confirm_button/Confirm_button.css' %}"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/buttons/buttons.css' %}"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/SearchBar.css' %}"
+      media="print"
+      onload="this.media='all'"
+    />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="{% static
-    'images/icon/apple-touch-icon.png' %}"
-    media="print" onload="this.media='all'"
+      href="/static/images/icon/apple-touch-icon.png"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="{% static 'images/icon/favicon-32x32.png' %}"
-      media="print" onload="this.media='all'"
+      href="/static/images/icon/favicon-32x32.png"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="{% static 'images/icon/favicon-16x16.png' %}"
-      media="print" onload="this.media='all'"
+      href="/static/images/icon/favicon-16x16.png"
+      media="print"
+      onload="this.media='all'"
     />
-    <link rel="manifest" href="{% static 'images/icon/site.webmanifest' %}" media="print" onload="this.media='all'"/>
+    <link
+      rel="manifest"
+      href="/static/images/icon/site.webmanifest"
+      media="print"
+      onload="this.media='all'"
+    />
   </head>
   <body>
+    <div class="transition transition-1 is-active"></div>
     <nav class="NavMain">
       <div class="logo">
         <h4>The nav Bar</h4>
@@ -62,57 +100,10 @@
         <div class="line3"></div>
       </div>
     </nav>
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark pb-1">
-    {% if user.is_authenticated %}
-        <a class="navbar-brand" href={% url "home" %}> Welcome {{ user.username }}</a>
-    {% else %}
-        <a class="navbar-brand" href={% url "home" %}> Welcome </a>
-    {% endif %}
-    <button class="navbar-toggler" type="button"
-            data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navmenu">
-            </button>
-            <li class="nav-item active">
-                <a class="nav-link" href={% url "home" %}>Home <span class="sr-only">(current)</span></a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item active">
-                    <a class="nav-link" href={% url "Users:logout" %}>Log Out</a>
-                </li>
-                <li class="nav-item active">
-                    {% if user.profile.id %}
-                        <a class="navbar-brand" href={% url "Profile:see_profile" user.profile.id %}>
-                            Profile {{ user.username }}</a>
-                    {% else %}
-                        <a class="navbar-brand" href={% url "Profile:create_profile" 1 %}> Create Profile</a>
-                    {% endif %}
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href={% url 'Restaurants:add_restaurant' %}> Create Bussiness </a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href={% url "Users:login_user" %}>Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href={% url "Users:signup" %}>SignUp</a>
-                </li>
-            {% endif %}
-        </ul>
-
+    <div class="buffer-top-100"></div>
+    <div class="pageBody container">
+      {% block content %} {% endblock %}
     </div>
-</nav> -->
-
-    <div class="container">{% block content %}{% endblock %}</div>
     <script type="text/javascript">
       const user = "{{ request.user }}";
 
@@ -135,6 +126,7 @@
 
       const csrftoken = getCookie("csrftoken");
     </script>
-    <script async type="module" src={% static "javascript/Base/Base.js"%} ></script>
+    <script async type="module" src={% static 'javascript/Pages/Navbar.js' %}></script>
+    <script async type=""application/javascript" src={% static 'javascript/Pages/transitions.js'%}></script>
   </body>
 </html>

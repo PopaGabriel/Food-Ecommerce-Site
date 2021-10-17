@@ -31,6 +31,12 @@ class MenuItem(models.Model):
 
     @property
     def getRatings(self) -> float:
+        """
+        Returns the medium value of the ratings
+
+        Returns:
+            float: Medium value of the ratings
+        """
         sum = 0
         for rating in self.ratings.all():
             sum += rating.mark
@@ -44,6 +50,15 @@ class MenuItem(models.Model):
         return (1 - self.discount / 100) * self.price
 
     def getRatingUser(self, user) -> int:
+        """
+        Returns the mark the user gave the food
+
+        Args:
+            user (User): The user that we search for
+
+        Returns:
+            int: Mark the user gave
+        """
         query = Ratings.objects.filter(food_id=self.pk, author=user)
         mark = query[0].mark if query.exists() else 0
         return mark

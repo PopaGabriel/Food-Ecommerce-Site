@@ -1,25 +1,10 @@
 .skill-card {
-  /*flex-shrink: 3;*/
   margin: 10px;
   padding: 20px;
   width: 18em;
-  background-color: #fff;
+  background-color: #00203fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
-
-/*.skill-card:hover {*/
-/*    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);*/
-/*    width: 36em;*/
-/*    transition: width 0.5s;*/
-/*}*/
-
-/*.skill-card:hover .skill-card__header {*/
-/*    height: 40px;*/
-/*}*/
-
-/*.skill-card:hover .skill-card__body {*/
-/*    height: 400px;*/
-/*}*/
 
 .skill-card__header {
   position: relative;
@@ -170,6 +155,11 @@
   padding: 20px;
   width: 36em;
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 1px 3px black, 0 1px 2px black;
   transition: width 0.5s;
+}
+
+.card {
+  background-color: #00203fff;
+  border: 0.5px solid black;
 }

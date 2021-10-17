@@ -6,7 +6,7 @@ class Menu(models.Model):
     type = models.CharField(max_length=100)
     restaurant = models.ForeignKey('Restaurants.Restaurant',
                                    on_delete=models.CASCADE,
-                                   related_name='menu')
+                                   related_name='menus')
 
     def __str__(self) -> str:
         return f'Type: {self.type} Restaurant: {self.restaurant}'

@@ -1,33 +1,32 @@
 .parent_ingredient_form {
-    margin-top: 4px;
-    padding: 5px;
-    max-height: 200px;
-    box-sizing: border-box;
-    justify-content: space-around;
+  margin-top: 4px;
+  padding: 5px;
+  max-height: 200px;
+  box-sizing: border-box;
+  justify-content: space-around;
 }
 
 .base_add_ingredient_form {
-    max-width: 60%;
-    margin: 10px;
-    padding: 5px;
-    border: 0.5px solid lightgrey;
-    box-sizing: border-box;
+  max-width: 60%;
+  margin: 10px;
+  padding: 5px;
+  border: 0.5px solid lightgrey;
+  box-sizing: border-box;
 }
 
 .input_border_around {
-    border: 0.5px solid lightgrey;
-    box-sizing: border-box;
+  border: 0.5px solid lightgrey;
+  box-sizing: border-box;
 }
 
 .overflow-auto {
-    overflow: auto;
+  overflow: auto;
 }
 
 .small_button {
-    border: none;
-    /*background: none;*/
-    margin: 2px;
+  border: none;
+  margin: 2px;
 }
 .reverse {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
